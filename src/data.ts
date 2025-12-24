@@ -15,6 +15,7 @@ export const DEFAULT_VALUES: Inputs = {
   monthlyDebts: "0",
   emergencyFund: "18000",
   desiredMonthlyHousing: "4000",
+  safetyMultiplier: "10",
 };
 
 export const PROPERTY_INPUTS: InputConfig[] = [
@@ -69,6 +70,11 @@ export const PROPERTY_INPUTS: InputConfig[] = [
       name: "desiredMonthlyHousing",
       label: "Desired Total Monthly Housing Cost ($)",
       placeholder: "e.g., 4000",
+    },
+    {
+      name: "safetyMultiplier",
+      label: "Safety Multiplier (%)",
+      placeholder: "e.g., 10",
     },
   ];
 

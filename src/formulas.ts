@@ -42,6 +42,7 @@ export function calculateMetrics(inputs: Inputs): CalculationResults | null {
   const income = parseFloat(inputs.annualIncome) || 0;
   const emergency = parseFloat(inputs.emergencyFund) || 0;
   const desiredHousing = parseFloat(inputs.desiredMonthlyHousing) || 4000;
+  const safetyMultiplier = (parseFloat(inputs.safetyMultiplier) || 0) / 100 + 1;
 
   // Validation
   if (price === 0 || down === 0 || income === 0) {
@@ -54,23 +55,25 @@ export function calculateMetrics(inputs: Inputs): CalculationResults | null {
 
   // Monthly mortgage payment (principal + interest)
   const mortgagePayment =
-    (loanAmount * (monthlyRate * Math.pow(1 + monthlyRate, numPayments))) /
-    (Math.pow(1 + monthlyRate, numPayments) - 1);
+    ((loanAmount * (monthlyRate * Math.pow(1 + monthlyRate, numPayments))) /
+    (Math.pow(1 + monthlyRate, numPayments) - 1)) * safetyMultiplier;
 
-  const monthlyTax = (price * taxRate / 100) / 12;
-  const monthlyInsurance = (price * insRate / 100) / 12;
-  const monthlyMaintenance = maintenanceAnnual / 12;
-  const monthlyRenovations = renovationsAnnual / 12;
+  const monthlyTax = ((price * taxRate / 100) / 12) * safetyMultiplier;
+  const monthlyInsurance = ((price * insRate / 100) / 12) * safetyMultiplier;
+  const monthlyMaintenance = (maintenanceAnnual / 12) * safetyMultiplier;
+  const monthlyRenovations = (renovationsAnnual / 12) * safetyMultiplier;
+  const monthlyHoa = hoa * safetyMultiplier;
+  const monthlyUtils = utils * safetyMultiplier;
 
   // Total monthly housing cost
   const totalMonthly =
     mortgagePayment +
     monthlyTax +
     monthlyInsurance +
-    hoa +
+    monthlyHoa +
     monthlyMaintenance +
     monthlyRenovations +
-    utils;
+    monthlyUtils;
 
   const monthlyIncome = income / 12;
   const downPaymentPercent = (down / price) * 100;
@@ -198,20 +201,20 @@ export function calculateMetrics(inputs: Inputs): CalculationResults | null {
         mortgage: mortgagePayment,
         tax: monthlyTax,
         insurance: monthlyInsurance,
-        hoa: hoa,
+        hoa: monthlyHoa,
         maintenance: monthlyMaintenance,
         renovations: monthlyRenovations,
-        utilities: utils,
+        utilities: monthlyUtils,
       },
       lifetimeBreakdown: {
         downPayment: down,
         mortgage: calculateLifetime(mortgagePayment, term),
         tax: calculateLifetime(monthlyTax, term),
         insurance: calculateLifetime(monthlyInsurance, term),
-        hoa: calculateLifetime(hoa, term),
+        hoa: calculateLifetime(monthlyHoa, term),
         maintenance: calculateLifetime(monthlyMaintenance, term),
         renovations: calculateLifetime(monthlyRenovations, term),
-        utilities: calculateLifetime(utils, term),
+        utilities: calculateLifetime(monthlyUtils, term),
       },
     },
   };

@@ -13,6 +13,7 @@ export interface Inputs {
   monthlyDebts: string;
   emergencyFund: string;
   desiredMonthlyHousing: string;
+  safetyMultiplier: string;
 }
 
 export interface InputConfig {
