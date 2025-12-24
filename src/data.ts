@@ -70,6 +70,12 @@ export const PROPERTY_INPUTS: InputConfig[] = [
       placeholder: "e.g., 100000",
       isCurrency: true,
     },
+    {
+      name: "monthlyDebts",
+      label: "Other Monthly Debts (Car, Student Loans, etc)",
+      placeholder: "0",
+      isCurrency: true,
+    },
     { name: "emergencyFund", label: "Emergency Fund ($)", placeholder: "0", isCurrency: true },
     {
       name: "desiredMonthlyHousing",

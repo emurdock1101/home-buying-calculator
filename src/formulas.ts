@@ -43,6 +43,7 @@ export function calculateMetrics(inputs: Inputs): CalculationResults | null {
   const renovationsAnnual = parseFloat(inputs.renovationsAnnual) || FORMULA_DEFAULTS.renovationsAnnual;
   const utils = parseFloat(inputs.utilities) || FORMULA_DEFAULTS.utilities;
   const income = parseFloat(inputs.annualIncome) || 0;
+  const debts = parseFloat(inputs.monthlyDebts) || 0;
   const emergency = parseFloat(inputs.emergencyFund) || 0;
   const desiredHousing = parseFloat(inputs.desiredMonthlyHousing) || 4000;
   const safetyMultiplier = (parseFloat(inputs.safetyMultiplier) || 0) / PERCENT_DIVISOR + 1;
@@ -82,7 +83,8 @@ export function calculateMetrics(inputs: Inputs): CalculationResults | null {
   const downPaymentPercent = (down / price) * PERCENT_DIVISOR;
 
   // Calculate metrics
-  const backEndRatio = (totalMonthly / monthlyIncome) * PERCENT_DIVISOR;
+  const frontEndRatio = (totalMonthly / monthlyIncome) * PERCENT_DIVISOR;
+  const backEndRatio = ((totalMonthly + debts) / monthlyIncome) * PERCENT_DIVISOR;
   const priceToIncome = price / income;
 
   // Build checklist
@@ -164,16 +166,22 @@ export function calculateMetrics(inputs: Inputs): CalculationResults | null {
     status: priceToIncomeStatus,
   });
 
-  // Monthly payment
+  // Front-end ratio (housing costs only)
+  const frontEndStatus = getStatus(
+    frontEndRatio,
+    THRESHOLDS.FRONT_END_RATIO.GOOD,
+    THRESHOLDS.FRONT_END_RATIO.WARNING,
+    "<="
+  );
   checklist.push({
-    label: "Total Monthly Payment",
-    value: `$${totalMonthly.toLocaleString(undefined, {
-      maximumFractionDigits: 0,
-    })}`,
-    description: `Includes mortgage ($${mortgagePayment.toFixed(
-      0
-    )}), taxes, insurance, HOA, maintenance/renos, utilities`,
-    status: housingBudgetStatus,
+    label: "Front-End Ratio",
+    value: `${frontEndRatio.toFixed(1)}%`,
+    description: getDescription(frontEndStatus, [
+      "Housing costs are well within recommended percentage of income",
+      "Housing costs are slightly high relative to income",
+      "Housing costs exceed recommended percentage of income",
+    ]),
+    status: frontEndStatus,
   });
 
   // Emergency fund
