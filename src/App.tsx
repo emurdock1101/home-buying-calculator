@@ -1,7 +1,37 @@
 import { useState } from "react";
 
 import { calculateMetrics } from "./formulas";
-import { PROPERTY_INPUTS, FINANCE_INPUTS,DEFAULT_VALUES } from "./data";
+import { PROPERTY_INPUTS, FINANCE_INPUTS, DEFAULT_VALUES } from "./data";
+import type { InputConfig } from "./types";
+
+interface InputFieldProps {
+  config: InputConfig;
+  value: string;
+  onChange: (field: string, value: string) => void;
+  formatCurrency: (value: string) => string;
+}
+
+function InputField({ config, value, onChange, formatCurrency }: InputFieldProps) {
+  return (
+    <div>
+      <label className="block text-sm font-medium text-gray-700">
+        {config.label}
+      </label>
+      {config.sublabel && (
+        <p className="text-xs text-gray-500 mb-1">{config.sublabel}</p>
+      )}
+      <input
+        type={config.isCurrency ? "text" : "number"}
+        step={config.step}
+        value={config.isCurrency ? formatCurrency(value) : value}
+        onChange={(e) => onChange(config.name, e.target.value)}
+        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+        placeholder={config.placeholder}
+      />
+    </div>
+  );
+}
+
 export default function App() {
   const [inputs, setInputs] = useState(DEFAULT_VALUES);
 
@@ -85,23 +115,13 @@ export default function App() {
 
             <div className="space-y-4">
               {PROPERTY_INPUTS.map((input) => (
-                <div key={input.name}>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    {input.label}
-                  </label>
-                  <input
-                    type={input.isCurrency ? "text" : "number"}
-                    step={input.step}
-                    value={
-                      input.isCurrency
-                        ? formatCurrencyInput(inputs[input.name as keyof typeof inputs])
-                        : inputs[input.name as keyof typeof inputs]
-                    }
-                    onChange={(e) => handleChange(input.name, e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                    placeholder={input.placeholder}
-                  />
-                </div>
+                <InputField
+                  key={input.name}
+                  config={input}
+                  value={inputs[input.name as keyof typeof inputs]}
+                  onChange={handleChange}
+                  formatCurrency={formatCurrencyInput}
+                />
               ))}
             </div>
 
@@ -109,22 +129,13 @@ export default function App() {
 
             <div className="space-y-4">
               {FINANCE_INPUTS.map((input) => (
-                <div key={input.name}>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    {input.label}
-                  </label>
-                  <input
-                    type={input.isCurrency ? "text" : "number"}
-                    value={
-                      input.isCurrency
-                        ? formatCurrencyInput(inputs[input.name as keyof typeof inputs])
-                        : inputs[input.name as keyof typeof inputs]
-                    }
-                    onChange={(e) => handleChange(input.name, e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                    placeholder={input.placeholder}
-                  />
-                </div>
+                <InputField
+                  key={input.name}
+                  config={input}
+                  value={inputs[input.name as keyof typeof inputs]}
+                  onChange={handleChange}
+                  formatCurrency={formatCurrencyInput}
+                />
               ))}
             </div>
           </div>

@@ -19,6 +19,7 @@ export interface Inputs {
 export interface InputConfig {
     name: keyof Inputs;
     label: string;
+    sublabel?: string;
     placeholder?: string;
     step?: string;
     isCurrency?: boolean;
