@@ -21,6 +21,7 @@ export interface InputConfig {
     label: string;
     placeholder?: string;
     step?: string;
+    isCurrency?: boolean;
   }
 
 export interface ChecklistItem {

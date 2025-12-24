@@ -23,11 +23,13 @@ export const PROPERTY_INPUTS: InputConfig[] = [
       name: "purchasePrice",
       label: `Purchase Price - Default: ${DEFAULT_VALUES.purchasePrice}`,
       placeholder: `e.g., ${DEFAULT_VALUES.purchasePrice}`,
+      isCurrency: true,
     },
     {
       name: "downPayment",
       label: `Down Payment - Default: ${DEFAULT_VALUES.downPayment}`,
       placeholder: `e.g., ${DEFAULT_VALUES.downPayment}`,
+      isCurrency: true,
     },
     {
       name: "interestRate",
@@ -45,18 +47,20 @@ export const PROPERTY_INPUTS: InputConfig[] = [
       label: "Home Insurance (% of price) - Default: 0.5%",
       step: "0.1",
     },
-    { name: "hoaFees", label: `HOA Fees ($/month) - Default: ${DEFAULT_VALUES.hoaFees}`, placeholder: "0" },
+    { name: "hoaFees", label: `HOA Fees ($/month) - Default: ${DEFAULT_VALUES.hoaFees}`, placeholder: "0", isCurrency: true },
     {
       name: "maintenanceAnnual",
       label: `Maintenance ($/year) - e.g. HVAC, filters, water heater - Default: ${DEFAULT_VALUES.maintenanceAnnual}`,
       placeholder: `Default: ${DEFAULT_VALUES.maintenanceAnnual}`,
+      isCurrency: true,
     },
     {
       name: "renovationsAnnual",
       label: `Renovations ($/year) - e.g. Roof, driveway, expansions - Default: ${DEFAULT_VALUES.renovationsAnnual}`,
       placeholder: `Default: ${DEFAULT_VALUES.renovationsAnnual}`,
+      isCurrency: true,
     },
-    { name: "utilities", label: `Utilities ($/month) - Default: ${DEFAULT_VALUES.utilities}` },
+    { name: "utilities", label: `Utilities ($/month) - Default: ${DEFAULT_VALUES.utilities}`, isCurrency: true },
   ];
   
   export const FINANCE_INPUTS: InputConfig[] = [
@@ -64,12 +68,14 @@ export const PROPERTY_INPUTS: InputConfig[] = [
       name: "annualIncome",
       label: "Annual Gross Income *",
       placeholder: "e.g., 100000",
+      isCurrency: true,
     },
-    { name: "emergencyFund", label: "Emergency Fund ($)", placeholder: "0" },
+    { name: "emergencyFund", label: "Emergency Fund ($)", placeholder: "0", isCurrency: true },
     {
       name: "desiredMonthlyHousing",
       label: "Desired Total Monthly Housing Cost ($)",
       placeholder: "e.g., 4000",
+      isCurrency: true,
     },
     {
       name: "safetyMultiplier",

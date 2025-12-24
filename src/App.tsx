@@ -6,7 +6,21 @@ export default function App() {
   const [inputs, setInputs] = useState(DEFAULT_VALUES);
 
   const handleChange = (field: string, value: string) => {
-    setInputs((prev) => ({ ...prev, [field]: value }));
+    // If it's a currency field, we might receive the formatted string
+    // We want to store just the numeric value in the state
+    const numericValue = value.replace(/[^0-9.]/g, "");
+    setInputs((prev) => ({ ...prev, [field]: numericValue }));
+  };
+
+  const formatCurrencyInput = (value: string) => {
+    if (!value) return "";
+    const num = parseFloat(value);
+    if (isNaN(num)) return value;
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+      maximumFractionDigits: 0,
+    }).format(num);
   };
 
   const results = calculateMetrics(inputs);
@@ -66,9 +80,13 @@ export default function App() {
                     {input.label}
                   </label>
                   <input
-                    type="number"
+                    type={input.isCurrency ? "text" : "number"}
                     step={input.step}
-                    value={inputs[input.name as keyof typeof inputs]}
+                    value={
+                      input.isCurrency
+                        ? formatCurrencyInput(inputs[input.name as keyof typeof inputs])
+                        : inputs[input.name as keyof typeof inputs]
+                    }
                     onChange={(e) => handleChange(input.name, e.target.value)}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md"
                     placeholder={input.placeholder}
@@ -86,8 +104,12 @@ export default function App() {
                     {input.label}
                   </label>
                   <input
-                    type="number"
-                    value={inputs[input.name as keyof typeof inputs]}
+                    type={input.isCurrency ? "text" : "number"}
+                    value={
+                      input.isCurrency
+                        ? formatCurrencyInput(inputs[input.name as keyof typeof inputs])
+                        : inputs[input.name as keyof typeof inputs]
+                    }
                     onChange={(e) => handleChange(input.name, e.target.value)}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md"
                     placeholder={input.placeholder}
