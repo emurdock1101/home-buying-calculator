@@ -8,12 +8,12 @@ export const DEFAULT_VALUES: Inputs = {
   propertyTax: "2.0",
   homeInsurance: "0.5",
   hoaFees: "130",
-  maintenanceAnnual: "8000",
-  renovationsAnnual: "6000",
+  maintenanceAnnual: "4000",
+  renovationsAnnual: "4000",
   utilities: "300",
   annualIncome: "160000",
   monthlyDebts: "0",
-  emergencyFund: "20000",
+  emergencyFund: "18000",
   desiredMonthlyHousing: "4000",
 };
 

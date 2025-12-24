@@ -35,6 +35,19 @@ export default function App() {
     }
   };
 
+  const renderBreakdownList = (items: { label: string; value: number }[]) => (
+    <div className="space-y-1">
+      {items.map((item, idx) => (
+        <p key={idx} className="flex justify-between">
+          <span>{item.label}:</span>
+          <span className="font-semibold">
+            ${item.value.toLocaleString(undefined, { maximumFractionDigits: 0 })}
+          </span>
+        </p>
+      ))}
+    </div>
+  );
+
   return (
     <div className="min-h-screen bg-gray-50 p-8">
       <div className="max-w-6xl mx-auto">
@@ -96,31 +109,15 @@ export default function App() {
                   <div className="text-3xl font-bold text-blue-700 mb-2">
                     ${summary.totalMonthlyCost.toLocaleString(undefined, { maximumFractionDigits: 0 })}
                   </div>
-                  <div className="text-sm text-blue-800 space-y-1">
-                    <p className="flex justify-between">
-                      <span>Mortgage (P&I):</span>
-                      <span className="font-semibold">${summary.monthlyBreakdown.mortgage.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
-                    </p>
-                    <p className="flex justify-between">
-                      <span>Taxes & Insurance:</span>
-                      <span className="font-semibold">${(summary.monthlyBreakdown.tax + summary.monthlyBreakdown.insurance).toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
-                    </p>
-                    <p className="flex justify-between">
-                      <span>HOA Fees:</span>
-                      <span className="font-semibold">${summary.monthlyBreakdown.hoa.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
-                    </p>
-                    <p className="flex justify-between">
-                      <span>Maintenance:</span>
-                      <span className="font-semibold">${summary.monthlyBreakdown.maintenance.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
-                    </p>
-                    <p className="flex justify-between">
-                      <span>Renovations:</span>
-                      <span className="font-semibold">${summary.monthlyBreakdown.renovations.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
-                    </p>
-                    <p className="flex justify-between">
-                      <span>Utilities:</span>
-                      <span className="font-semibold">${summary.monthlyBreakdown.utilities.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
-                    </p>
+                  <div className="text-sm text-blue-800">
+                    {renderBreakdownList([
+                      { label: "Mortgage (P&I)", value: summary.monthlyBreakdown.mortgage },
+                      { label: "Taxes & Insurance", value: summary.monthlyBreakdown.tax + summary.monthlyBreakdown.insurance },
+                      { label: "HOA Fees", value: summary.monthlyBreakdown.hoa },
+                      { label: "Maintenance", value: summary.monthlyBreakdown.maintenance },
+                      { label: "Renovations", value: summary.monthlyBreakdown.renovations },
+                      { label: "Utilities", value: summary.monthlyBreakdown.utilities },
+                    ])}
                   </div>
                 </div>
 
@@ -132,35 +129,16 @@ export default function App() {
                   <p className="text-xs text-purple-800 mb-3 italic">
                     Estimated total spent over {summary.loanTerm} years
                   </p>
-                  <div className="text-sm text-purple-800 space-y-1">
-                    <p className="flex justify-between">
-                      <span>Down Payment:</span>
-                      <span className="font-semibold">${summary.lifetimeBreakdown.downPayment.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
-                    </p>
-                    <p className="flex justify-between">
-                      <span>Total Mortgage (P&I):</span>
-                      <span className="font-semibold">${summary.lifetimeBreakdown.mortgage.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
-                    </p>
-                    <p className="flex justify-between">
-                      <span>Total Taxes & Insurance:</span>
-                      <span className="font-semibold">${(summary.lifetimeBreakdown.tax + summary.lifetimeBreakdown.insurance).toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
-                    </p>
-                    <p className="flex justify-between">
-                      <span>Total HOA Fees:</span>
-                      <span className="font-semibold">${summary.lifetimeBreakdown.hoa.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
-                    </p>
-                    <p className="flex justify-between">
-                      <span>Total Maintenance:</span>
-                      <span className="font-semibold">${summary.lifetimeBreakdown.maintenance.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
-                    </p>
-                    <p className="flex justify-between">
-                      <span>Total Renovations:</span>
-                      <span className="font-semibold">${summary.lifetimeBreakdown.renovations.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
-                    </p>
-                    <p className="flex justify-between">
-                      <span>Total Utilities:</span>
-                      <span className="font-semibold">${summary.lifetimeBreakdown.utilities.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
-                    </p>
+                  <div className="text-sm text-purple-800">
+                    {renderBreakdownList([
+                      { label: "Down Payment", value: summary.lifetimeBreakdown.downPayment },
+                      { label: "Total Mortgage (P&I)", value: summary.lifetimeBreakdown.mortgage },
+                      { label: "Total Taxes & Insurance", value: summary.lifetimeBreakdown.tax + summary.lifetimeBreakdown.insurance },
+                      { label: "Total HOA Fees", value: summary.lifetimeBreakdown.hoa },
+                      { label: "Total Maintenance", value: summary.lifetimeBreakdown.maintenance },
+                      { label: "Total Renovations", value: summary.lifetimeBreakdown.renovations },
+                      { label: "Total Utilities", value: summary.lifetimeBreakdown.utilities },
+                    ])}
                   </div>
                 </div>
               </div>
