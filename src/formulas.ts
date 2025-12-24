@@ -1,6 +1,9 @@
 import { THRESHOLDS, FORMULA_DEFAULTS } from "./data";
 import type { Inputs, ChecklistItem, CalculationResults } from "./types";
 
+const MONTHS_IN_YEAR = 12;
+const PERCENT_DIVISOR = 100;
+
 function getStatus(
   value: number,
   good: number,
@@ -25,7 +28,7 @@ function getDescription(
 }
 
 function calculateLifetime(monthlyAmount: number, termYears: number): number {
-  return monthlyAmount * 12 * termYears;
+  return monthlyAmount * MONTHS_IN_YEAR * termYears;
 }
 
 export function calculateMetrics(inputs: Inputs): CalculationResults | null {
@@ -42,7 +45,7 @@ export function calculateMetrics(inputs: Inputs): CalculationResults | null {
   const income = parseFloat(inputs.annualIncome) || 0;
   const emergency = parseFloat(inputs.emergencyFund) || 0;
   const desiredHousing = parseFloat(inputs.desiredMonthlyHousing) || 4000;
-  const safetyMultiplier = (parseFloat(inputs.safetyMultiplier) || 0) / 100 + 1;
+  const safetyMultiplier = (parseFloat(inputs.safetyMultiplier) || 0) / PERCENT_DIVISOR + 1;
 
   // Validation
   if (price === 0 || down === 0 || income === 0) {
@@ -50,18 +53,18 @@ export function calculateMetrics(inputs: Inputs): CalculationResults | null {
   }
 
   const loanAmount = price - down;
-  const monthlyRate = rate / 100 / 12;
-  const numPayments = term * 12;
+  const monthlyRate = rate / PERCENT_DIVISOR / MONTHS_IN_YEAR;
+  const numPayments = term * MONTHS_IN_YEAR;
 
   // Monthly mortgage payment (principal + interest)
   const mortgagePayment =
     ((loanAmount * (monthlyRate * Math.pow(1 + monthlyRate, numPayments))) /
     (Math.pow(1 + monthlyRate, numPayments) - 1)) * safetyMultiplier;
 
-  const monthlyTax = ((price * taxRate / 100) / 12) * safetyMultiplier;
-  const monthlyInsurance = ((price * insRate / 100) / 12) * safetyMultiplier;
-  const monthlyMaintenance = (maintenanceAnnual / 12) * safetyMultiplier;
-  const monthlyRenovations = (renovationsAnnual / 12) * safetyMultiplier;
+  const monthlyTax = ((price * taxRate / PERCENT_DIVISOR) / MONTHS_IN_YEAR) * safetyMultiplier;
+  const monthlyInsurance = ((price * insRate / PERCENT_DIVISOR) / MONTHS_IN_YEAR) * safetyMultiplier;
+  const monthlyMaintenance = (maintenanceAnnual / MONTHS_IN_YEAR) * safetyMultiplier;
+  const monthlyRenovations = (renovationsAnnual / MONTHS_IN_YEAR) * safetyMultiplier;
   const monthlyHoa = hoa * safetyMultiplier;
   const monthlyUtils = utils * safetyMultiplier;
 
@@ -75,11 +78,11 @@ export function calculateMetrics(inputs: Inputs): CalculationResults | null {
     monthlyRenovations +
     monthlyUtils;
 
-  const monthlyIncome = income / 12;
-  const downPaymentPercent = (down / price) * 100;
+  const monthlyIncome = income / MONTHS_IN_YEAR;
+  const downPaymentPercent = (down / price) * PERCENT_DIVISOR;
 
   // Calculate metrics
-  const backEndRatio = (totalMonthly / monthlyIncome) * 100;
+  const backEndRatio = (totalMonthly / monthlyIncome) * PERCENT_DIVISOR;
   const priceToIncome = price / income;
 
   // Build checklist
@@ -104,10 +107,12 @@ export function calculateMetrics(inputs: Inputs): CalculationResults | null {
   });
 
   // Housing budget assessment
+  const desiredMonthlyWarningBuffer = desiredHousing + 250;
+  const desiredMonthlyCriticalBuffer = desiredHousing + 500;
   const housingBudgetStatus = getStatus(
     totalMonthly,
-    desiredHousing + 250,
-    desiredHousing + 500,
+    desiredMonthlyWarningBuffer,
+    desiredMonthlyCriticalBuffer,
     "<="
   );
   checklist.push({
