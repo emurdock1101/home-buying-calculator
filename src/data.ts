@@ -8,11 +8,13 @@ export const DEFAULT_VALUES: Inputs = {
   propertyTax: "2.0",
   homeInsurance: "0.5",
   hoaFees: "130",
-  maintenance: "1.0",
+  maintenanceAnnual: "8000",
+  renovationsAnnual: "10000",
   utilities: "300",
   annualIncome: "160000",
   monthlyDebts: "0",
-  emergencyFund: "15000",
+  emergencyFund: "20000",
+  desiredMonthlyHousing: "4000",
 };
 
 export const PROPERTY_INPUTS: InputConfig[] = [
@@ -44,9 +46,14 @@ export const PROPERTY_INPUTS: InputConfig[] = [
     },
     { name: "hoaFees", label: `HOA Fees ($/month) - Default: ${DEFAULT_VALUES.hoaFees}`, placeholder: "0" },
     {
-      name: "maintenance",
-      label: `Maintenance (% of price) - Default: ${DEFAULT_VALUES.maintenance}%`,
-      step: "0.1",
+      name: "maintenanceAnnual",
+      label: `Maintenance ($/year) - e.g. HVAC, filters, water heater - Default: ${DEFAULT_VALUES.maintenanceAnnual}`,
+      placeholder: `Default: ${DEFAULT_VALUES.maintenanceAnnual}`,
+    },
+    {
+      name: "renovationsAnnual",
+      label: `Renovations ($/year) - e.g. Roof, driveway, expansions - Default: ${DEFAULT_VALUES.renovationsAnnual}`,
+      placeholder: `Default: ${DEFAULT_VALUES.renovationsAnnual}`,
     },
     { name: "utilities", label: `Utilities ($/month) - Default: ${DEFAULT_VALUES.utilities}` },
   ];
@@ -58,6 +65,11 @@ export const PROPERTY_INPUTS: InputConfig[] = [
       placeholder: "e.g., 100000",
     },
     { name: "emergencyFund", label: "Emergency Fund ($)", placeholder: "0" },
+    {
+      name: "desiredMonthlyHousing",
+      label: "Desired Total Monthly Housing Cost ($)",
+      placeholder: "e.g., 4000",
+    },
   ];
 
 export const THRESHOLDS = {
@@ -77,8 +89,7 @@ export const THRESHOLDS = {
     GOOD: 3,
     WARNING: 4,
   },
-  EMERGENCY_FUND_MONTHS: 6,
-  EMERGENCY_FUND_WARNING_THRESHOLD: 2, // Half of recommended
+  EMERGENCY_FUND_MINIMUM: 20000,
 };
 
 export const FORMULA_DEFAULTS = {
@@ -86,6 +97,7 @@ export const FORMULA_DEFAULTS = {
   loanTerm: 30,
   propertyTax: 1.2,
   homeInsurance: 0.5,
-  maintenance: 1.0,
+  maintenanceAnnual: 8000,
+  renovationsAnnual: 10000,
   utilities: 300,
 };

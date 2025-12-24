@@ -1,25 +1,5 @@
 import { THRESHOLDS, FORMULA_DEFAULTS } from "./data";
-
-export interface Inputs {
-  purchasePrice: string;
-  downPayment: string;
-  interestRate: string;
-  loanTerm: string;
-  propertyTax: string;
-  homeInsurance: string;
-  hoaFees: string;
-  maintenance: string;
-  utilities: string;
-  annualIncome: string;
-  emergencyFund: string;
-}
-
-export interface ChecklistItem {
-  label: string;
-  value: string;
-  description: string;
-  status: "good" | "warning" | "bad";
-}
+import type { Inputs, ChecklistItem } from "./types";
 
 function getStatus(
   value: number,
@@ -34,6 +14,16 @@ function getStatus(
   }
 }
 
+function getDescription(
+  status: "good" | "warning" | "bad",
+  descriptions: [string, string, string]
+): string {
+  const [good, warning, bad] = descriptions;
+  if (status === "good") return good;
+  if (status === "warning") return warning;
+  return bad;
+}
+
 export function calculateMetrics(inputs: Inputs): ChecklistItem[] {
   const price = parseFloat(inputs.purchasePrice) || 0;
   const down = parseFloat(inputs.downPayment) || 0;
@@ -42,10 +32,12 @@ export function calculateMetrics(inputs: Inputs): ChecklistItem[] {
   const taxRate = parseFloat(inputs.propertyTax) || FORMULA_DEFAULTS.propertyTax;
   const insRate = parseFloat(inputs.homeInsurance) || FORMULA_DEFAULTS.homeInsurance;
   const hoa = parseFloat(inputs.hoaFees) || 0;
-  const maintRate = parseFloat(inputs.maintenance) || FORMULA_DEFAULTS.maintenance;
+  const maintenanceAnnual = parseFloat(inputs.maintenanceAnnual) || FORMULA_DEFAULTS.maintenanceAnnual;
+  const renovationsAnnual = parseFloat(inputs.renovationsAnnual) || FORMULA_DEFAULTS.renovationsAnnual;
   const utils = parseFloat(inputs.utilities) || FORMULA_DEFAULTS.utilities;
   const income = parseFloat(inputs.annualIncome) || 0;
   const emergency = parseFloat(inputs.emergencyFund) || 0;
+  const desiredHousing = parseFloat(inputs.desiredMonthlyHousing) || 4000;
 
   // Validation
   if (price === 0 || down === 0 || income === 0) {
@@ -64,7 +56,7 @@ export function calculateMetrics(inputs: Inputs): ChecklistItem[] {
   // Other monthly costs
   const monthlyTax = (price * taxRate / 100) / 12;
   const monthlyInsurance = (price * insRate / 100) / 12;
-  const monthlyMaintenance = (price * maintRate / 100) / 12;
+  const monthlyMaintenance = (maintenanceAnnual + renovationsAnnual) / 12;
 
   // Total monthly housing cost
   const totalMonthly =
@@ -79,84 +71,84 @@ export function calculateMetrics(inputs: Inputs): ChecklistItem[] {
   const downPaymentPercent = (down / price) * 100;
 
   // Calculate metrics
-  const frontEndRatio = (totalMonthly / monthlyIncome) * 100;
   const backEndRatio = (totalMonthly / monthlyIncome) * 100;
   const priceToIncome = price / income;
-  const recommendedEmergency = totalMonthly * THRESHOLDS.EMERGENCY_FUND_MONTHS;
 
   // Build checklist
   const checklist: ChecklistItem[] = [];
 
   // Down Payment
+  const downPaymentStatus = getStatus(
+    downPaymentPercent,
+    THRESHOLDS.DOWN_PAYMENT.GOOD,
+    THRESHOLDS.DOWN_PAYMENT.WARNING,
+    ">="
+  );
   checklist.push({
     label: "Down Payment",
     value: `${downPaymentPercent.toFixed(1)}% ($${down.toLocaleString()})`,
-    description:
-      downPaymentPercent >= THRESHOLDS.DOWN_PAYMENT.GOOD
-        ? `Excellent! ${THRESHOLDS.DOWN_PAYMENT.GOOD}%+ avoids PMI`
-        : downPaymentPercent >= THRESHOLDS.DOWN_PAYMENT.WARNING
-        ? "Good, but PMI may apply"
-        : "Low down payment - expect PMI and higher costs",
-    status: getStatus(
-      downPaymentPercent,
-      THRESHOLDS.DOWN_PAYMENT.GOOD,
-      THRESHOLDS.DOWN_PAYMENT.WARNING,
-      ">="
-    ),
+    description: getDescription(downPaymentStatus, [
+      `Excellent! ${THRESHOLDS.DOWN_PAYMENT.GOOD}%+ avoids PMI`,
+      "Good, but PMI may apply",
+      "Low down payment - expect PMI and higher costs",
+    ]),
+    status: downPaymentStatus,
   });
 
-  // Front-end ratio (housing costs only)
+  // Housing budget assessment
+  const housingBudgetStatus = getStatus(
+    totalMonthly,
+    desiredHousing + 250,
+    desiredHousing + 500,
+    "<="
+  );
   checklist.push({
-    label: "Front-End Ratio",
-    value: `${frontEndRatio.toFixed(1)}%`,
-    description:
-      frontEndRatio <= THRESHOLDS.FRONT_END_RATIO.GOOD
-        ? "Housing costs are well within recommended limits"
-        : frontEndRatio <= THRESHOLDS.FRONT_END_RATIO.WARNING
-        ? "Housing costs are slightly high but manageable"
-        : "Housing costs are too high relative to income",
-    status: getStatus(
-      frontEndRatio,
-      THRESHOLDS.FRONT_END_RATIO.GOOD,
-      THRESHOLDS.FRONT_END_RATIO.WARNING,
-      "<="
-    ),
+    label: "Monthly Housing Budget",
+    value: `$${totalMonthly.toLocaleString(undefined, {
+      maximumFractionDigits: 0,
+    })} vs $${desiredHousing.toLocaleString()} goal`,
+    description: getDescription(housingBudgetStatus, [
+      "Total monthly costs are within your desired budget range",
+      `Costs are slightly over budget (+$250-$500)`,
+      `Costs exceed your desired budget by more than $500`,
+    ]),
+    status: housingBudgetStatus,
   });
 
   // Back-end ratio (all debts)
+  const backEndStatus = getStatus(
+    backEndRatio,
+    THRESHOLDS.BACK_END_RATIO.GOOD,
+    THRESHOLDS.BACK_END_RATIO.WARNING,
+    "<="
+  );
   checklist.push({
     label: "Back-End Ratio (DTI)",
     value: `${backEndRatio.toFixed(1)}%`,
-    description:
-      backEndRatio <= THRESHOLDS.BACK_END_RATIO.GOOD
-        ? "Total debt is manageable"
-        : backEndRatio <= THRESHOLDS.BACK_END_RATIO.WARNING
-        ? "Total debt is on the higher side"
-        : "Total debt exceeds recommended levels",
-    status: getStatus(
-      backEndRatio,
-      THRESHOLDS.BACK_END_RATIO.GOOD,
-      THRESHOLDS.BACK_END_RATIO.WARNING,
-      "<="
-    ),
+    description: getDescription(backEndStatus, [
+      "Total debt is manageable",
+      "Total debt is on the higher side",
+      "Total debt exceeds recommended levels",
+    ]),
+    status: backEndStatus,
   });
 
   // Price to income ratio
+  const priceToIncomeStatus = getStatus(
+    priceToIncome,
+    THRESHOLDS.PRICE_TO_INCOME.GOOD,
+    THRESHOLDS.PRICE_TO_INCOME.WARNING,
+    "<="
+  );
   checklist.push({
     label: "Price-to-Income Ratio",
     value: `${priceToIncome.toFixed(1)}x`,
-    description:
-      priceToIncome <= THRESHOLDS.PRICE_TO_INCOME.GOOD
-        ? "Home price is conservative relative to income"
-        : priceToIncome <= THRESHOLDS.PRICE_TO_INCOME.WARNING
-        ? "Home price is reasonable but stretching"
-        : "Home price is very high relative to income",
-    status: getStatus(
-      priceToIncome,
-      THRESHOLDS.PRICE_TO_INCOME.GOOD,
-      THRESHOLDS.PRICE_TO_INCOME.WARNING,
-      "<="
-    ),
+    description: getDescription(priceToIncomeStatus, [
+      "Home price is conservative relative to income",
+      "Home price is reasonable but stretching",
+      "Home price is very high relative to income",
+    ]),
+    status: priceToIncomeStatus,
   });
 
   // Monthly payment
@@ -167,41 +159,26 @@ export function calculateMetrics(inputs: Inputs): ChecklistItem[] {
     })}`,
     description: `Includes mortgage ($${mortgagePayment.toFixed(
       0
-    )}), taxes, insurance, HOA, maintenance, utilities`,
-    status: getStatus(
-      frontEndRatio,
-      THRESHOLDS.FRONT_END_RATIO.GOOD,
-      THRESHOLDS.FRONT_END_RATIO.WARNING,
-      "<="
-    ),
+    )}), taxes, insurance, HOA, maintenance/renos, utilities`,
+    status: housingBudgetStatus,
   });
 
   // Emergency fund
+  const emergencyStatus = getStatus(
+    emergency,
+    THRESHOLDS.EMERGENCY_FUND_MINIMUM,
+    THRESHOLDS.EMERGENCY_FUND_MINIMUM / 2,
+    ">="
+  );
   checklist.push({
     label: "Emergency Fund",
     value: `$${emergency.toLocaleString()}`,
-    description:
-      emergency >= recommendedEmergency
-        ? `Great! You have ${THRESHOLDS.EMERGENCY_FUND_MONTHS}+ months of housing costs covered`
-        : emergency >=
-          recommendedEmergency / THRESHOLDS.EMERGENCY_FUND_WARNING_THRESHOLD
-        ? `You have ~${(emergency / totalMonthly).toFixed(
-            1
-          )} months covered. Aim for ${
-            THRESHOLDS.EMERGENCY_FUND_MONTHS
-          } months ($${recommendedEmergency.toLocaleString(undefined, {
-            maximumFractionDigits: 0,
-          })})`
-        : `Build emergency fund to at least $${recommendedEmergency.toLocaleString(
-            undefined,
-            { maximumFractionDigits: 0 }
-          )} (${THRESHOLDS.EMERGENCY_FUND_MONTHS} months)`,
-    status: getStatus(
-      emergency,
-      recommendedEmergency,
-      recommendedEmergency / THRESHOLDS.EMERGENCY_FUND_WARNING_THRESHOLD,
-      ">="
-    ),
+    description: getDescription(emergencyStatus, [
+      `Excellent! You have met the recommended $${THRESHOLDS.EMERGENCY_FUND_MINIMUM.toLocaleString()} reserve`,
+      `Getting there, but aim for at least $${THRESHOLDS.EMERGENCY_FUND_MINIMUM.toLocaleString()}`,
+      `Your emergency fund is low. Target at least $${THRESHOLDS.EMERGENCY_FUND_MINIMUM.toLocaleString()} for safety`,
+    ]),
+    status: emergencyStatus,
   });
 
   return checklist;

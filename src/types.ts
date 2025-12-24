@@ -6,11 +6,13 @@ export interface Inputs {
   propertyTax: string;
   homeInsurance: string;
   hoaFees: string;
-  maintenance: string;
+  maintenanceAnnual: string;
+  renovationsAnnual: string;
   utilities: string;
   annualIncome: string;
   monthlyDebts: string;
   emergencyFund: string;
+  desiredMonthlyHousing: string;
 }
 
 export interface InputConfig {
