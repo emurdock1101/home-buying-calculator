@@ -9,7 +9,7 @@ export const DEFAULT_VALUES: Inputs = {
   homeInsurance: "0.5",
   hoaFees: "130",
   maintenanceAnnual: "8000",
-  renovationsAnnual: "10000",
+  renovationsAnnual: "6000",
   utilities: "300",
   annualIncome: "160000",
   monthlyDebts: "0",

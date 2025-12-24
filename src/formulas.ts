@@ -1,5 +1,5 @@
 import { THRESHOLDS, FORMULA_DEFAULTS } from "./data";
-import type { Inputs, ChecklistItem } from "./types";
+import type { Inputs, ChecklistItem, CalculationResults } from "./types";
 
 function getStatus(
   value: number,
@@ -24,7 +24,11 @@ function getDescription(
   return bad;
 }
 
-export function calculateMetrics(inputs: Inputs): ChecklistItem[] {
+function calculateLifetime(monthlyAmount: number, termYears: number): number {
+  return monthlyAmount * 12 * termYears;
+}
+
+export function calculateMetrics(inputs: Inputs): CalculationResults | null {
   const price = parseFloat(inputs.purchasePrice) || 0;
   const down = parseFloat(inputs.downPayment) || 0;
   const rate = parseFloat(inputs.interestRate) || FORMULA_DEFAULTS.interestRate;
@@ -41,7 +45,7 @@ export function calculateMetrics(inputs: Inputs): ChecklistItem[] {
 
   // Validation
   if (price === 0 || down === 0 || income === 0) {
-    return [];
+    return null;
   }
 
   const loanAmount = price - down;
@@ -53,10 +57,10 @@ export function calculateMetrics(inputs: Inputs): ChecklistItem[] {
     (loanAmount * (monthlyRate * Math.pow(1 + monthlyRate, numPayments))) /
     (Math.pow(1 + monthlyRate, numPayments) - 1);
 
-  // Other monthly costs
   const monthlyTax = (price * taxRate / 100) / 12;
   const monthlyInsurance = (price * insRate / 100) / 12;
-  const monthlyMaintenance = (maintenanceAnnual + renovationsAnnual) / 12;
+  const monthlyMaintenance = maintenanceAnnual / 12;
+  const monthlyRenovations = renovationsAnnual / 12;
 
   // Total monthly housing cost
   const totalMonthly =
@@ -65,6 +69,7 @@ export function calculateMetrics(inputs: Inputs): ChecklistItem[] {
     monthlyInsurance +
     hoa +
     monthlyMaintenance +
+    monthlyRenovations +
     utils;
 
   const monthlyIncome = income / 12;
@@ -181,5 +186,33 @@ export function calculateMetrics(inputs: Inputs): ChecklistItem[] {
     status: emergencyStatus,
   });
 
-  return checklist;
+  const totalLifetimeCost = down + calculateLifetime(totalMonthly, term);
+
+  return {
+    checklist,
+    summary: {
+      totalMonthlyCost: totalMonthly,
+      totalLifetimeCost,
+      loanTerm: term,
+      monthlyBreakdown: {
+        mortgage: mortgagePayment,
+        tax: monthlyTax,
+        insurance: monthlyInsurance,
+        hoa: hoa,
+        maintenance: monthlyMaintenance,
+        renovations: monthlyRenovations,
+        utilities: utils,
+      },
+      lifetimeBreakdown: {
+        downPayment: down,
+        mortgage: calculateLifetime(mortgagePayment, term),
+        tax: calculateLifetime(monthlyTax, term),
+        insurance: calculateLifetime(monthlyInsurance, term),
+        hoa: calculateLifetime(hoa, term),
+        maintenance: calculateLifetime(monthlyMaintenance, term),
+        renovations: calculateLifetime(monthlyRenovations, term),
+        utilities: calculateLifetime(utils, term),
+      },
+    },
+  };
 }

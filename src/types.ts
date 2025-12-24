@@ -28,3 +28,31 @@ export interface ChecklistItem {
   description: string;
   status: "good" | "warning" | "bad";
 }
+
+export interface CalculationResults {
+  checklist: ChecklistItem[];
+  summary: {
+    totalMonthlyCost: number;
+    totalLifetimeCost: number;
+    monthlyBreakdown: {
+      mortgage: number;
+      tax: number;
+      insurance: number;
+      hoa: number;
+      maintenance: number;
+      renovations: number;
+      utilities: number;
+    };
+    lifetimeBreakdown: {
+      downPayment: number;
+      mortgage: number;
+      tax: number;
+      insurance: number;
+      hoa: number;
+      maintenance: number;
+      renovations: number;
+      utilities: number;
+    };
+    loanTerm: number;
+  };
+}
