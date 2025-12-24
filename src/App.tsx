@@ -66,7 +66,17 @@ export default function App() {
     <div className="min-h-screen bg-gray-50 p-8">
       <div className="max-w-6xl mx-auto">
         <h1 className="text-3xl font-bold text-gray-900 mb-8">
-          Home Buying Calculator
+          <span
+            style={{
+              fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+              background: "linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              display: "inline-block"
+            }}
+          >
+            Home Buying Calculator
+          </span>
         </h1>
 
         <div className="grid md:grid-cols-2 gap-8">
