@@ -102,7 +102,9 @@ export default function App() {
               background: "linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet)",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
-              display: "inline-block"
+              display: "inline-block",
+              paddingBottom: "0.2em",
+              lineHeight: "1.2"
             }}
           >
             Home Buying Calculator
