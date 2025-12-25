@@ -103,7 +103,7 @@ export default function App() {
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
               display: "inline-block",
-              paddingBottom: "0.2em",
+              paddingBottom: "0.1em",
               lineHeight: "1.2"
             }}
           >
