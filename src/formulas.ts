@@ -45,6 +45,7 @@ export function calculateMetrics(inputs: Inputs): CalculationResults | null {
   const income = parseFloat(inputs.annualIncome) || 0;
   const debts = parseFloat(inputs.monthlyDebts) || 0;
   const emergency = parseFloat(inputs.emergencyFund) || 0;
+  const closingCosts = parseFloat(inputs.closingCosts) || 0;
   const desiredHousing = parseFloat(inputs.desiredMonthlyHousing) || 4000;
   const safetyMultiplier = (parseFloat(inputs.safetyMultiplier) || 0) / PERCENT_DIVISOR + 1;
 
@@ -202,7 +203,7 @@ export function calculateMetrics(inputs: Inputs): CalculationResults | null {
     status: emergencyStatus,
   });
 
-  const totalLifetimeCost = down + calculateLifetime(totalMonthly, term);
+  const totalLifetimeCost = down + closingCosts + calculateLifetime(totalMonthly, term);
 
   return {
     checklist,
@@ -221,6 +222,7 @@ export function calculateMetrics(inputs: Inputs): CalculationResults | null {
       },
       lifetimeBreakdown: {
         downPayment: down,
+        closingCosts,
         mortgage: calculateLifetime(mortgagePayment, term),
         tax: calculateLifetime(monthlyTax, term),
         insurance: calculateLifetime(monthlyInsurance, term),

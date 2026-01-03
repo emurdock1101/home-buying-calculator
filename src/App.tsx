@@ -39,7 +39,18 @@ export default function App() {
     // If it's a currency field, we might receive the formatted string
     // We want to store just the numeric value in the state
     const numericValue = value.replace(/[^0-9.]/g, "");
-    setInputs((prev) => ({ ...prev, [field]: numericValue }));
+    
+    setInputs((prev) => {
+      const newInputs = { ...prev, [field]: numericValue };
+      
+      // If purchase price changes, update closing costs to default (1%)
+      if (field === "purchasePrice") {
+        const price = parseFloat(numericValue) || 0;
+        newInputs.closingCosts = (price * 0.01).toFixed(0);
+      }
+      
+      return newInputs;
+    });
   };
 
   const formatCurrencyInput = (value: string) => {
@@ -157,7 +168,8 @@ export default function App() {
                   <div className="text-sm text-blue-800">
                     {renderBreakdownList([
                       { label: "Mortgage (P&I)", value: summary.monthlyBreakdown.mortgage },
-                      { label: "Taxes & Insurance", value: summary.monthlyBreakdown.tax + summary.monthlyBreakdown.insurance },
+                      { label: "Property Tax", value: summary.monthlyBreakdown.tax },
+                      { label: "Home Insurance", value: summary.monthlyBreakdown.insurance },
                       { label: "HOA Fees", value: summary.monthlyBreakdown.hoa },
                       { label: "Maintenance", value: summary.monthlyBreakdown.maintenance },
                       { label: "Renovations", value: summary.monthlyBreakdown.renovations },
@@ -177,8 +189,10 @@ export default function App() {
                   <div className="text-sm text-purple-800">
                     {renderBreakdownList([
                       { label: "Down Payment", value: summary.lifetimeBreakdown.downPayment },
+                      { label: "Closing Costs", value: summary.lifetimeBreakdown.closingCosts },
                       { label: "Total Mortgage (P&I)", value: summary.lifetimeBreakdown.mortgage },
-                      { label: "Total Taxes & Insurance", value: summary.lifetimeBreakdown.tax + summary.lifetimeBreakdown.insurance },
+                      { label: "Total Property Tax", value: summary.lifetimeBreakdown.tax },
+                      { label: "Total Home Insurance", value: summary.lifetimeBreakdown.insurance },
                       { label: "Total HOA Fees", value: summary.lifetimeBreakdown.hoa },
                       { label: "Total Maintenance", value: summary.lifetimeBreakdown.maintenance },
                       { label: "Total Renovations", value: summary.lifetimeBreakdown.renovations },

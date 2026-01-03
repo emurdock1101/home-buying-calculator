@@ -12,6 +12,7 @@ export interface Inputs {
   annualIncome: string;
   monthlyDebts: string;
   emergencyFund: string;
+  closingCosts: string;
   desiredMonthlyHousing: string;
   safetyMultiplier: string;
 }
@@ -48,6 +49,7 @@ export interface CalculationResults {
     };
     lifetimeBreakdown: {
       downPayment: number;
+      closingCosts: number;
       mortgage: number;
       tax: number;
       insurance: number;

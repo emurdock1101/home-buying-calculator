@@ -2,20 +2,21 @@ import type { InputConfig, Inputs } from "./types";
 
 export const DEFAULT_VALUES: Inputs = {
   purchasePrice: "450000",
-  downPayment: "100000",
+  downPayment: "130000",
   interestRate: "5.3",
   loanTerm: "15",
-  propertyTax: "1.1",
+  propertyTax: "1.0",
   homeInsurance: "0.9",
   hoaFees: "90",
   maintenanceAnnual: "2500",
-  renovationsAnnual: "3500",
+  renovationsAnnual: "3000",
   utilities: "300",
   annualIncome: "160000",
   monthlyDebts: "0",
   emergencyFund: "18000",
+  closingCosts: "4500",
   desiredMonthlyHousing: "4000",
-  safetyMultiplier: "10",
+  safetyMultiplier: "5",
 };
 
 export const PROPERTY_INPUTS: InputConfig[] = [
@@ -31,6 +32,13 @@ export const PROPERTY_INPUTS: InputConfig[] = [
     label: "Down Payment",
     sublabel: `Default: $${DEFAULT_VALUES.downPayment}`,
     placeholder: `e.g., ${DEFAULT_VALUES.downPayment}`,
+    isCurrency: true,
+  },
+  {
+    name: "closingCosts",
+    label: "Closing Costs",
+    sublabel: `Default: 1% of price - $${DEFAULT_VALUES.closingCosts}`,
+    placeholder: `e.g., ${DEFAULT_VALUES.closingCosts}`,
     isCurrency: true,
   },
   {
