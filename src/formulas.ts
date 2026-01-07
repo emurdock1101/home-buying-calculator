@@ -1,4 +1,4 @@
-import { DEFAULT_VALUES, THRESHOLDS } from "./data";
+import { THRESHOLDS } from "./data";
 import type { Inputs, ChecklistItem, CalculationResults, PeriodicCost } from "./types";
 
 const MONTHS_IN_YEAR = 12;
@@ -232,7 +232,7 @@ export function calculateMetrics(inputs: Inputs): CalculationResults | null {
   const periodic: PeriodicCost[] = intervals.map(years => {
     const months = years * MONTHS_IN_YEAR;
     const totalSpent = down + closingCosts + (totalMonthly * months);
-    const principalOwned = calculatePrincipalPaid(loanAmount, monthlyRate, rawMortgagePayment, Math.min(months, numPayments));
+    const principalOwned = down + calculatePrincipalPaid(loanAmount, monthlyRate, rawMortgagePayment, Math.min(months, numPayments));
     
     // "Cheaper" logic based on unrecoverable costs
     // Rent unrecoverable: rentTotal
