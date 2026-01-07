@@ -17,6 +17,7 @@ export const DEFAULT_VALUES: Inputs = {
   closingCosts: "4500",
   desiredMonthlyHousing: "4000",
   safetyMultiplier: "5",
+  monthlyRent: "2600",
 };
 
 export const PROPERTY_INPUTS: InputConfig[] = [
@@ -123,6 +124,13 @@ export const FINANCE_INPUTS: InputConfig[] = [
     isCurrency: true,
   },
   {
+    name: "monthlyRent",
+    label: "Potential Monthly Rent ($)",
+    sublabel: `Default: $${DEFAULT_VALUES.monthlyRent}`,
+    placeholder: `e.g., ${DEFAULT_VALUES.monthlyRent}`,
+    isCurrency: true,
+  },
+  {
     name: "safetyMultiplier",
     label: "Safety Multiplier (%)",
     sublabel: "e.g., 10",
@@ -148,14 +156,4 @@ export const THRESHOLDS = {
     WARNING: 4,
   },
   EMERGENCY_FUND_MINIMUM: 20000,
-};
-
-export const FORMULA_DEFAULTS = {
-  interestRate: 7.0,
-  loanTerm: 30,
-  propertyTax: 1.2,
-  homeInsurance: 0.5,
-  maintenanceAnnual: 8000,
-  renovationsAnnual: 10000,
-  utilities: 300,
 };

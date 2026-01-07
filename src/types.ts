@@ -15,6 +15,7 @@ export interface Inputs {
   closingCosts: string;
   desiredMonthlyHousing: string;
   safetyMultiplier: string;
+  monthlyRent: string;
 }
 
 export interface InputConfig {
@@ -31,6 +32,14 @@ export interface ChecklistItem {
   value: string;
   description: string;
   status: "good" | "warning" | "bad";
+}
+
+export interface PeriodicCost {
+  years: number;
+  totalSpent: number;
+  principalOwned: number;
+  netCost: number;
+  isCheaperThanRent: boolean;
 }
 
 export interface CalculationResults {
@@ -59,5 +68,8 @@ export interface CalculationResults {
       utilities: number;
     };
     loanTerm: number;
+  };
+  comparisons: {
+    periodic: PeriodicCost[];
   };
 }
