@@ -1,5 +1,10 @@
 import { THRESHOLDS } from "./data";
-import type { Inputs, ChecklistItem, CalculationResults, PeriodicCost } from "./types";
+import type {
+  Inputs,
+  ChecklistItem,
+  CalculationResults,
+  PeriodicCost,
+} from "./types";
 
 const MONTHS_IN_YEAR = 12;
 const PERCENT_DIVISOR = 100;
@@ -31,12 +36,17 @@ function calculateLifetime(monthlyAmount: number, termYears: number): number {
   return monthlyAmount * MONTHS_IN_YEAR * termYears;
 }
 
-function calculatePrincipalPaid(loanAmount: number, monthlyRate: number, monthlyPayment: number, months: number): number {
+function calculatePrincipalPaid(
+  loanAmount: number,
+  monthlyRate: number,
+  monthlyPayment: number,
+  months: number
+): number {
   if (monthlyRate === 0) return Math.min(loanAmount, monthlyPayment * months);
-  
+
   let balance = loanAmount;
   let totalPrincipalPaid = 0;
-  
+
   // Use the actual number of months, capped at the loan term
   for (let i = 0; i < months; i++) {
     const interest = balance * monthlyRate;
@@ -52,8 +62,8 @@ export function calculateMetrics(inputs: Inputs): CalculationResults | null {
   const price = parseFloat(inputs.purchasePrice);
   const down = parseFloat(inputs.downPayment);
   const rate = parseFloat(inputs.interestRate);
-    const term = parseFloat(inputs.loanTerm);
-    const taxRate = parseFloat(inputs.propertyTax);
+  const term = parseFloat(inputs.loanTerm);
+  const taxRate = parseFloat(inputs.propertyTax);
   const insRate = parseFloat(inputs.homeInsurance);
   const hoa = parseFloat(inputs.hoaFees);
   const maintenanceAnnual = parseFloat(inputs.maintenanceAnnual);
@@ -64,7 +74,8 @@ export function calculateMetrics(inputs: Inputs): CalculationResults | null {
   const emergency = parseFloat(inputs.emergencyFund);
   const closingCosts = parseFloat(inputs.closingCosts);
   const desiredHousing = parseFloat(inputs.desiredMonthlyHousing);
-  const safetyMultiplier = (parseFloat(inputs.safetyMultiplier) / PERCENT_DIVISOR + 1);
+  const safetyMultiplier =
+    parseFloat(inputs.safetyMultiplier) / PERCENT_DIVISOR + 1;
   const monthlyRent = parseFloat(inputs.monthlyRent);
 
   // Validation
@@ -77,17 +88,23 @@ export function calculateMetrics(inputs: Inputs): CalculationResults | null {
   const numPayments = term * MONTHS_IN_YEAR;
 
   // Raw monthly mortgage payment (principal + interest) for principal calculation
-  const rawMortgagePayment = loanAmount > 0 ? 
-    (loanAmount * (monthlyRate * Math.pow(1 + monthlyRate, numPayments))) /
-    (Math.pow(1 + monthlyRate, numPayments) - 1) : 0;
+  const rawMortgagePayment =
+    loanAmount > 0
+      ? (loanAmount * (monthlyRate * Math.pow(1 + monthlyRate, numPayments))) /
+        (Math.pow(1 + monthlyRate, numPayments) - 1)
+      : 0;
 
   // Monthly mortgage payment with safety multiplier
   const mortgagePayment = rawMortgagePayment * safetyMultiplier;
 
-  const monthlyTax = ((price * taxRate / PERCENT_DIVISOR) / MONTHS_IN_YEAR) * safetyMultiplier;
-  const monthlyInsurance = ((price * insRate / PERCENT_DIVISOR) / MONTHS_IN_YEAR) * safetyMultiplier;
-  const monthlyMaintenance = (maintenanceAnnual / MONTHS_IN_YEAR) * safetyMultiplier;
-  const monthlyRenovations = (renovationsAnnual / MONTHS_IN_YEAR) * safetyMultiplier;
+  const monthlyTax =
+    ((price * taxRate) / PERCENT_DIVISOR / MONTHS_IN_YEAR) * safetyMultiplier;
+  const monthlyInsurance =
+    ((price * insRate) / PERCENT_DIVISOR / MONTHS_IN_YEAR) * safetyMultiplier;
+  const monthlyMaintenance =
+    (maintenanceAnnual / MONTHS_IN_YEAR) * safetyMultiplier;
+  const monthlyRenovations =
+    (renovationsAnnual / MONTHS_IN_YEAR) * safetyMultiplier;
   const monthlyHoa = hoa * safetyMultiplier;
   const monthlyUtils = utils * safetyMultiplier;
 
@@ -106,7 +123,8 @@ export function calculateMetrics(inputs: Inputs): CalculationResults | null {
 
   // Calculate metrics
   const frontEndRatio = (totalMonthly / monthlyIncome) * PERCENT_DIVISOR;
-  const backEndRatio = ((totalMonthly + debts) / monthlyIncome) * PERCENT_DIVISOR;
+  const backEndRatio =
+    ((totalMonthly + debts) / monthlyIncome) * PERCENT_DIVISOR;
   const priceToIncome = price / income;
 
   // Build checklist
@@ -224,28 +242,36 @@ export function calculateMetrics(inputs: Inputs): CalculationResults | null {
     status: emergencyStatus,
   });
 
-  const totalLifetimeCost = down + closingCosts + calculateLifetime(totalMonthly, term);
+  const totalLifetimeCost =
+    down + closingCosts + calculateLifetime(totalMonthly, term);
 
-  // Interval comparisons (5, 10, 15 years)
-  const intervals = [5, 10, 15];
+  // Interval comparisons (3, 5, 7, 10, 12, 15 years)
+  const intervals = [3, 5, 7, 10, 12, 15];
 
-  const periodic: PeriodicCost[] = intervals.map(years => {
+  const periodic: PeriodicCost[] = intervals.map((years) => {
     const months = years * MONTHS_IN_YEAR;
-    const totalSpent = down + closingCosts + (totalMonthly * months);
-    const principalOwned = down + calculatePrincipalPaid(loanAmount, monthlyRate, rawMortgagePayment, Math.min(months, numPayments));
-    
+    const totalSpent = down + closingCosts + totalMonthly * months;
+    const principalOwned =
+      down +
+      calculatePrincipalPaid(
+        loanAmount,
+        monthlyRate,
+        rawMortgagePayment,
+        Math.min(months, numPayments)
+      );
+
     // "Cheaper" logic based on unrecoverable costs
     // Rent unrecoverable: rentTotal
     // Own unrecoverable: totalSpent - principalOwned + 10000 (selling costs)
     const rentTotal = monthlyRent * MONTHS_IN_YEAR * years;
     const netCost = totalSpent - principalOwned + 10000;
-    
+
     return {
       years,
       totalSpent,
       principalOwned,
       netCost,
-      isCheaperThanRent: netCost < rentTotal
+      isCheaperThanRent: netCost < rentTotal,
     };
   });
 
@@ -277,7 +303,7 @@ export function calculateMetrics(inputs: Inputs): CalculationResults | null {
       },
     },
     comparisons: {
-      periodic
-    }
+      periodic,
+    },
   };
 }
