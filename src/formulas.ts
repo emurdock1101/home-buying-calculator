@@ -232,7 +232,6 @@ export function calculateMetrics(inputs: Inputs): CalculationResults | null {
     calculateLifetime(totalMonthly, term) +
     (price * Math.pow(1 + homeAppreciation, term)) * sellingClosingCostsRate;
 
-  // Interval comparisons (3, 5, 7, 10, 12, 15 years)
   const intervals = [3, 5, 7, 10, 12, 15];
 
   const periodic: PeriodicCost[] = intervals.map((years) => {

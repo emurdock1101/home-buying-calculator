@@ -17,7 +17,7 @@ export const DEFAULT_VALUES: Inputs = {
   sellingClosingCosts: "7",
   desiredMonthlyHousing: "4000",
   safetyMultiplier: "2",
-  monthlyRent: "2600",
+  monthlyRent: "2800",
   homeAppreciation: "2",
 };
 
