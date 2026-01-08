@@ -11,7 +11,6 @@ export interface Inputs {
   utilities: string;
   annualIncome: string;
   monthlyDebts: string;
-  emergencyFund: string;
   closingCosts: string;
   desiredMonthlyHousing: string;
   safetyMultiplier: string;
@@ -20,19 +19,45 @@ export interface Inputs {
 }
 
 export interface InputConfig {
-    name: keyof Inputs;
-    label: string;
-    sublabel?: string;
-    placeholder?: string;
-    step?: string;
-    isCurrency?: boolean;
-  }
+  name: keyof Inputs;
+  label: string;
+  sublabel?: string;
+  placeholder?: string;
+  step?: string;
+  isCurrency?: boolean;
+}
 
 export interface ChecklistItem {
   label: string;
   value: string;
   description: string;
   status: "good" | "warning" | "bad";
+}
+
+export interface Summary {
+  totalMonthlyCost: number;
+  totalLifetimeCost: number;
+  monthlyBreakdown: {
+    mortgage: number;
+    tax: number;
+    insurance: number;
+    hoa: number;
+    maintenance: number;
+    renovations: number;
+    utilities: number;
+  };
+  lifetimeBreakdown: {
+    downPayment: number;
+    closingCosts: number;
+    mortgage: number;
+    tax: number;
+    insurance: number;
+    hoa: number;
+    maintenance: number;
+    renovations: number;
+    utilities: number;
+  };
+  loanTerm: number;
 }
 
 export interface PeriodicCost {
@@ -54,31 +79,7 @@ export interface PeriodicCost {
 
 export interface CalculationResults {
   checklist: ChecklistItem[];
-  summary: {
-    totalMonthlyCost: number;
-    totalLifetimeCost: number;
-    monthlyBreakdown: {
-      mortgage: number;
-      tax: number;
-      insurance: number;
-      hoa: number;
-      maintenance: number;
-      renovations: number;
-      utilities: number;
-    };
-    lifetimeBreakdown: {
-      downPayment: number;
-      closingCosts: number;
-      mortgage: number;
-      tax: number;
-      insurance: number;
-      hoa: number;
-      maintenance: number;
-      renovations: number;
-      utilities: number;
-    };
-    loanTerm: number;
-  };
+  summary: Summary;
   comparisons: {
     periodic: PeriodicCost[];
   };

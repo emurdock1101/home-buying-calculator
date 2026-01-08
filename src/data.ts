@@ -13,7 +13,6 @@ export const DEFAULT_VALUES: Inputs = {
   utilities: "300",
   annualIncome: "160000",
   monthlyDebts: "0",
-  emergencyFund: "18000",
   closingCosts: "2.5",
   desiredMonthlyHousing: "4000",
   safetyMultiplier: "2",
@@ -109,15 +108,8 @@ export const FINANCE_INPUTS: InputConfig[] = [
     isCurrency: true,
   },
   {
-    name: "emergencyFund",
-    label: "Emergency Fund ($)",
-    sublabel: `Default: $${DEFAULT_VALUES.emergencyFund}`,
-    placeholder: `Default: $${DEFAULT_VALUES.emergencyFund}`,
-    isCurrency: true,
-  },
-  {
     name: "desiredMonthlyHousing",
-    label: "Desired Monthly Housing ($)",
+    label: "Desired Monthly Housing Budget ($)",
     sublabel: `Default: $${DEFAULT_VALUES.desiredMonthlyHousing}`,
     placeholder: `Default: $${DEFAULT_VALUES.desiredMonthlyHousing}`,
     isCurrency: true,
@@ -132,12 +124,7 @@ export const OTHER_INPUTS: InputConfig[] = [
     placeholder: `Default: ${DEFAULT_VALUES.closingCosts}%`,
     step: "0.1",
   },
-  {
-    name: "safetyMultiplier",
-    label: "Safety Multiplier (%)",
-    sublabel: `Default: ${DEFAULT_VALUES.safetyMultiplier}% - multiply all costs by this extra buffer for safety`,
-    placeholder: `Default: ${DEFAULT_VALUES.safetyMultiplier}%`,
-  },
+
   {
     name: "homeAppreciation",
     label: "Annual Home Appreciation (%)",
@@ -151,6 +138,12 @@ export const OTHER_INPUTS: InputConfig[] = [
     sublabel: `Default: $${DEFAULT_VALUES.monthlyRent}`,
     placeholder: `Default: $${DEFAULT_VALUES.monthlyRent}`,
     isCurrency: true,
+  },
+  {
+    name: "safetyMultiplier",
+    label: "Safety Multiplier (%)",
+    sublabel: `Default: ${DEFAULT_VALUES.safetyMultiplier}% - multiply all costs by this extra buffer for safety`,
+    placeholder: `Default: ${DEFAULT_VALUES.safetyMultiplier}%`,
   },
 ];
 
@@ -171,5 +164,4 @@ export const THRESHOLDS = {
     GOOD: 3,
     WARNING: 4,
   },
-  EMERGENCY_FUND_MINIMUM: 20000,
 };

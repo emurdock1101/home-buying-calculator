@@ -71,7 +71,6 @@ export function calculateMetrics(inputs: Inputs): CalculationResults | null {
   const utils = parseFloat(inputs.utilities);
   const income = parseFloat(inputs.annualIncome);
   const debts = parseFloat(inputs.monthlyDebts);
-  const emergency = parseFloat(inputs.emergencyFund);
   const closingCosts = (parseFloat(inputs.closingCosts) / PERCENT_DIVISOR) * price;
   const desiredHousing = parseFloat(inputs.desiredMonthlyHousing);
   const safetyMultiplier =
@@ -222,24 +221,6 @@ export function calculateMetrics(inputs: Inputs): CalculationResults | null {
       "Housing costs exceed recommended percentage of income",
     ]),
     status: frontEndStatus,
-  });
-
-  // Emergency fund
-  const emergencyStatus = getStatus(
-    emergency,
-    THRESHOLDS.EMERGENCY_FUND_MINIMUM,
-    THRESHOLDS.EMERGENCY_FUND_MINIMUM / 2,
-    ">="
-  );
-  checklist.push({
-    label: "Emergency Fund",
-    value: `$${emergency.toLocaleString()}`,
-    description: getDescription(emergencyStatus, [
-      `Excellent! You have met the recommended $${THRESHOLDS.EMERGENCY_FUND_MINIMUM.toLocaleString()} reserve`,
-      `Getting there, but aim for at least $${THRESHOLDS.EMERGENCY_FUND_MINIMUM.toLocaleString()}`,
-      `Your emergency fund is low. Target at least $${THRESHOLDS.EMERGENCY_FUND_MINIMUM.toLocaleString()} for safety`,
-    ]),
-    status: emergencyStatus,
   });
 
   const totalLifetimeCost =

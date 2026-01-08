@@ -1,0 +1,182 @@
+import type { CalculationResults, ChecklistItem, Summary } from "../types";
+
+const renderBreakdownList = (items: { label: string; value: number }[]) => (
+  <div className="space-y-1">
+    {items.map((item, idx) => (
+      <p key={idx} className="flex justify-between">
+        <span>{item.label}:</span>
+        <span className="font-semibold">
+          ${item.value.toLocaleString(undefined, { maximumFractionDigits: 0 })}
+        </span>
+      </p>
+    ))}
+  </div>
+);
+
+const getStatusIcon = (status: "good" | "warning" | "bad") => {
+  switch (status) {
+    case "good":
+      return "✓";
+    case "warning":
+      return "⚠";
+    case "bad":
+      return "✗";
+  }
+};
+
+const getStatusColor = (status: "good" | "warning" | "bad") => {
+  switch (status) {
+    case "good":
+      return "bg-green-100 border-green-500";
+    case "warning":
+      return "bg-yellow-100 border-yellow-500";
+    case "bad":
+      return "bg-red-100 border-red-500";
+  }
+};
+
+export const SummaryColumn = ({
+  results,
+}: {
+  results: CalculationResults | null;
+}) => {
+  const checklist: ChecklistItem[] = results?.checklist || [];
+  const summary: Summary | undefined = results?.summary;
+  
+  return (
+    <div className="bg-white rounded-lg shadow p-6">
+      <h2 className="text-xl font-semibold mb-4">Financial Summary</h2>
+
+      {summary ? (
+        <div className="grid grid-cols-1 gap-4 mb-6">
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <h3 className="text-blue-900 font-bold text-lg mb-1">
+              Total Monthly Cost
+            </h3>
+            <div className="text-3xl font-bold text-blue-700 mb-2">
+              $
+              {summary.totalMonthlyCost.toLocaleString(undefined, {
+                maximumFractionDigits: 0,
+              })}
+            </div>
+            <div className="text-sm text-blue-800">
+              {renderBreakdownList([
+                {
+                  label: "Mortgage (P&I)",
+                  value: summary.monthlyBreakdown.mortgage,
+                },
+                {
+                  label: "Property Tax",
+                  value: summary.monthlyBreakdown.tax,
+                },
+                {
+                  label: "Home Insurance",
+                  value: summary.monthlyBreakdown.insurance,
+                },
+                {
+                  label: "HOA Fees",
+                  value: summary.monthlyBreakdown.hoa,
+                },
+                {
+                  label: "Maintenance",
+                  value: summary.monthlyBreakdown.maintenance,
+                },
+                {
+                  label: "Renovations",
+                  value: summary.monthlyBreakdown.renovations,
+                },
+                {
+                  label: "Utilities",
+                  value: summary.monthlyBreakdown.utilities,
+                },
+              ])}
+            </div>
+          </div>
+
+          <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
+            <h3 className="text-purple-900 font-bold text-lg mb-1">
+              Total Lifetime Cost
+            </h3>
+            <div className="text-3xl font-bold text-purple-700 mb-2">
+              $
+              {summary.totalLifetimeCost.toLocaleString(undefined, {
+                maximumFractionDigits: 0,
+              })}
+            </div>
+            <p className="text-xs text-purple-800 mb-3 italic">
+              Estimated total spent over {summary.loanTerm} years
+            </p>
+            <div className="text-sm text-purple-800">
+              {renderBreakdownList([
+                {
+                  label: "Down Payment",
+                  value: summary.lifetimeBreakdown.downPayment,
+                },
+                {
+                  label: "Closing Costs",
+                  value: summary.lifetimeBreakdown.closingCosts,
+                },
+                {
+                  label: "Total Mortgage (P&I)",
+                  value: summary.lifetimeBreakdown.mortgage,
+                },
+                {
+                  label: "Total Property Tax",
+                  value: summary.lifetimeBreakdown.tax,
+                },
+                {
+                  label: "Total Home Insurance",
+                  value: summary.lifetimeBreakdown.insurance,
+                },
+                {
+                  label: "Total HOA Fees",
+                  value: summary.lifetimeBreakdown.hoa,
+                },
+                {
+                  label: "Total Maintenance",
+                  value: summary.lifetimeBreakdown.maintenance,
+                },
+                {
+                  label: "Total Renovations",
+                  value: summary.lifetimeBreakdown.renovations,
+                },
+                {
+                  label: "Total Utilities",
+                  value: summary.lifetimeBreakdown.utilities,
+                },
+              ])}
+            </div>
+          </div>
+        </div>
+      ) : null}
+
+      <h2 className="text-xl font-semibold mb-4">Affordability Checklist</h2>
+
+      <div className="space-y-3">
+        {checklist.map((item, idx) => (
+          <div
+            key={idx}
+            className={`border-l-4 p-4 rounded ${getStatusColor(item.status)}`}
+          >
+            <div className="flex items-start">
+              <span className="text-2xl mr-3">
+                {getStatusIcon(item.status)}
+              </span>
+              <div className="flex-1">
+                <h3 className="font-semibold text-gray-900">{item.label}</h3>
+                <p className="text-sm text-gray-700 mt-1">{item.value}</p>
+                <p className="text-xs text-gray-600 mt-1">{item.description}</p>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {checklist.length === 0 && (
+        <p className="text-gray-500 text-center py-8">
+          Enter required fields to see your affordability assessment
+        </p>
+      )}
+    </div>
+  );
+};
