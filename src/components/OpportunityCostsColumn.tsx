@@ -115,7 +115,7 @@ export const OpportunityCostsColumn = ({
                             </p>
                             <p className="text-[10px] text-gray-400">
                               - Buying Costs: $
-                              {p.sellingCosts.toLocaleString(undefined, {
+                              {p.buyingCosts.toLocaleString(undefined, {
                                 maximumFractionDigits: 0,
                               })}
                             </p>

@@ -113,8 +113,12 @@ export const SummaryColumn = ({
                   value: summary.lifetimeBreakdown.downPayment,
                 },
                 {
-                  label: "Closing Costs",
-                  value: summary.lifetimeBreakdown.closingCosts,
+                  label: "Buying Closing Costs",
+                  value: summary.lifetimeBreakdown.buyingClosingCosts,
+                },
+                {
+                  label: "Selling Closing Costs",
+                  value: summary.lifetimeBreakdown.sellingClosingCosts,
                 },
                 {
                   label: "Total Mortgage (P&I)",

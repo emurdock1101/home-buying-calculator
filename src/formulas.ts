@@ -71,7 +71,10 @@ export function calculateMetrics(inputs: Inputs): CalculationResults | null {
   const utils = parseFloat(inputs.utilities);
   const income = parseFloat(inputs.annualIncome);
   const debts = parseFloat(inputs.monthlyDebts);
-  const closingCosts = (parseFloat(inputs.closingCosts) / PERCENT_DIVISOR) * price;
+  const buyingClosingCosts =
+    (parseFloat(inputs.buyingClosingCosts) / PERCENT_DIVISOR) * price;
+  const sellingClosingCostsRate =
+    parseFloat(inputs.sellingClosingCosts) / PERCENT_DIVISOR;
   const desiredHousing = parseFloat(inputs.desiredMonthlyHousing);
   const safetyMultiplier =
     parseFloat(inputs.safetyMultiplier) / PERCENT_DIVISOR + 1;
@@ -224,7 +227,10 @@ export function calculateMetrics(inputs: Inputs): CalculationResults | null {
   });
 
   const totalLifetimeCost =
-    down + closingCosts + calculateLifetime(totalMonthly, term);
+    down +
+    buyingClosingCosts +
+    calculateLifetime(totalMonthly, term) +
+    (price * Math.pow(1 + homeAppreciation, term)) * sellingClosingCostsRate;
 
   // Interval comparisons (3, 5, 7, 10, 12, 15 years)
   const intervals = [3, 5, 7, 10, 12, 15];
@@ -246,8 +252,12 @@ export function calculateMetrics(inputs: Inputs): CalculationResults | null {
     const totalUtilsHoa = (monthlyUtils + monthlyHoa) * months;
     const totalTaxIns = (monthlyTax + monthlyInsurance) * months;
 
+    const currentPrice = price + appreciationAmount;
+    const sellingCosts = currentPrice * sellingClosingCostsRate;
+
     // totalSpent = down payment + buying closing costs + all monthly payments + selling closing costs
-    const totalSpent = down + closingCosts + totalMonthly * months + closingCosts;
+    const totalSpent =
+      down + buyingClosingCosts + totalMonthly * months + sellingCosts;
     const netCost = totalSpent - principalOwned;
 
     // Rent unrecoverable: rentTotal
@@ -260,7 +270,8 @@ export function calculateMetrics(inputs: Inputs): CalculationResults | null {
       principalPaidOff,
       initialDownPayment: down,
       appreciationAmount,
-      sellingCosts: closingCosts,
+      buyingCosts: buyingClosingCosts,
+      sellingCosts,
       netCost,
       isCheaperThanRent: netCost < rentTotal,
       totalMortgage,
@@ -287,7 +298,10 @@ export function calculateMetrics(inputs: Inputs): CalculationResults | null {
       },
       lifetimeBreakdown: {
         downPayment: down,
-        closingCosts,
+        buyingClosingCosts,
+        sellingClosingCosts:
+          (price * Math.pow(1 + homeAppreciation, term)) *
+          sellingClosingCostsRate,
         mortgage: calculateLifetime(mortgagePayment, term),
         tax: calculateLifetime(monthlyTax, term),
         insurance: calculateLifetime(monthlyInsurance, term),

@@ -13,7 +13,8 @@ export const DEFAULT_VALUES: Inputs = {
   utilities: "300",
   annualIncome: "160000",
   monthlyDebts: "0",
-  closingCosts: "2.5",
+  buyingClosingCosts: "3",
+  sellingClosingCosts: "7",
   desiredMonthlyHousing: "4000",
   safetyMultiplier: "2",
   monthlyRent: "2600",
@@ -118,10 +119,17 @@ export const FINANCE_INPUTS: InputConfig[] = [
 
 export const OTHER_INPUTS: InputConfig[] = [
   {
-    name: "closingCosts",
-    label: "Closing Costs (%)",
-    sublabel: `Default: ${DEFAULT_VALUES.closingCosts}%`,
-    placeholder: `Default: ${DEFAULT_VALUES.closingCosts}%`,
+    name: "buyingClosingCosts",
+    label: "Buying Closing Costs (%)",
+    sublabel: `Default: ${DEFAULT_VALUES.buyingClosingCosts}%`,
+    placeholder: `Default: ${DEFAULT_VALUES.buyingClosingCosts}%`,
+    step: "0.1",
+  },
+  {
+    name: "sellingClosingCosts",
+    label: "Selling Closing Costs (%)",
+    sublabel: `Default: ${DEFAULT_VALUES.sellingClosingCosts}%`,
+    placeholder: `Default: ${DEFAULT_VALUES.sellingClosingCosts}%`,
     step: "0.1",
   },
 

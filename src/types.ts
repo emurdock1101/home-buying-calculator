@@ -11,11 +11,12 @@ export interface Inputs {
   utilities: string;
   annualIncome: string;
   monthlyDebts: string;
-  closingCosts: string;
   desiredMonthlyHousing: string;
   safetyMultiplier: string;
   monthlyRent: string;
   homeAppreciation: string;
+  buyingClosingCosts: string;
+  sellingClosingCosts: string;
 }
 
 export interface InputConfig {
@@ -48,7 +49,8 @@ export interface Summary {
   };
   lifetimeBreakdown: {
     downPayment: number;
-    closingCosts: number;
+    buyingClosingCosts: number;
+    sellingClosingCosts: number;
     mortgage: number;
     tax: number;
     insurance: number;
@@ -67,6 +69,7 @@ export interface PeriodicCost {
   principalPaidOff: number;
   initialDownPayment: number;
   appreciationAmount: number;
+  buyingCosts: number;
   sellingCosts: number;
   netCost: number;
   isCheaperThanRent: boolean;
