@@ -14,7 +14,7 @@ export const DEFAULT_VALUES: Inputs = {
   annualIncome: "160000",
   monthlyDebts: "0",
   emergencyFund: "18000",
-  closingCosts: "10000",
+  closingCosts: "2.5",
   desiredMonthlyHousing: "4000",
   safetyMultiplier: "2",
   monthlyRent: "2600",
@@ -38,10 +38,10 @@ export const PROPERTY_INPUTS: InputConfig[] = [
   },
   {
     name: "closingCosts",
-    label: "Closing Costs",
-    sublabel: `Default: 1% of price - $${DEFAULT_VALUES.closingCosts}`,
-    placeholder: `Default: $${DEFAULT_VALUES.closingCosts}`,
-    isCurrency: true,
+    label: "Closing Costs (%)",
+    sublabel: `Default: ${DEFAULT_VALUES.closingCosts}%`,
+    placeholder: `Default: ${DEFAULT_VALUES.closingCosts}%`,
+    step: "0.1",
   },
   {
     name: "interestRate",

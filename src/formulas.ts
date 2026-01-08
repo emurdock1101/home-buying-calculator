@@ -72,7 +72,7 @@ export function calculateMetrics(inputs: Inputs): CalculationResults | null {
   const income = parseFloat(inputs.annualIncome);
   const debts = parseFloat(inputs.monthlyDebts);
   const emergency = parseFloat(inputs.emergencyFund);
-  const closingCosts = parseFloat(inputs.closingCosts);
+  const closingCosts = (parseFloat(inputs.closingCosts) / PERCENT_DIVISOR) * price;
   const desiredHousing = parseFloat(inputs.desiredMonthlyHousing);
   const safetyMultiplier =
     parseFloat(inputs.safetyMultiplier) / PERCENT_DIVISOR + 1;

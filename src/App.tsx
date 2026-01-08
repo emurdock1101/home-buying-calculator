@@ -46,11 +46,6 @@ export default function App() {
     setInputs((prev) => {
       const newInputs = { ...prev, [field]: numericValue };
 
-      if (field === "purchasePrice") {
-        const price = parseFloat(numericValue) || 0;
-        newInputs.closingCosts = (price * 0.01).toFixed(0);
-      }
-
       return newInputs;
     });
   };
@@ -310,7 +305,7 @@ export default function App() {
                     Total Spent & Equity
                   </h3>
                   <p className="text-[10px] text-green-800 mb-2 italic">
-                    Incl. $10k selling costs. Green highlight = Cheaper option.
+                    Green highlight = Cheaper option.
                   </p>
                   <div className="space-y-3">
                     {results.comparisons.periodic.map((p) => {
