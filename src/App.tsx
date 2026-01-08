@@ -1,7 +1,12 @@
 import { useState } from "react";
 
 import { calculateMetrics } from "./formulas";
-import { PROPERTY_INPUTS, FINANCE_INPUTS, DEFAULT_VALUES } from "./data";
+import {
+  PROPERTY_INPUTS,
+  FINANCE_INPUTS,
+  OTHER_INPUTS,
+  DEFAULT_VALUES,
+} from "./data";
 import type { InputConfig } from "./types";
 
 interface InputFieldProps {
@@ -141,6 +146,22 @@ export default function App() {
 
             <div className="space-y-4">
               {FINANCE_INPUTS.map((input) => (
+                <InputField
+                  key={input.name}
+                  config={input}
+                  value={inputs[input.name as keyof typeof inputs]}
+                  onChange={handleChange}
+                  formatCurrency={formatCurrencyInput}
+                />
+              ))}
+            </div>
+
+            <h2 className="text-xl font-semibold mt-6 mb-4">
+              Other Considerations
+            </h2>
+
+            <div className="space-y-4">
+              {OTHER_INPUTS.map((input) => (
                 <InputField
                   key={input.name}
                   config={input}

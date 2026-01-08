@@ -37,13 +37,6 @@ export const PROPERTY_INPUTS: InputConfig[] = [
     isCurrency: true,
   },
   {
-    name: "closingCosts",
-    label: "Closing Costs (%)",
-    sublabel: `Default: ${DEFAULT_VALUES.closingCosts}%`,
-    placeholder: `Default: ${DEFAULT_VALUES.closingCosts}%`,
-    step: "0.1",
-  },
-  {
     name: "interestRate",
     label: "Interest Rate (%)",
     sublabel: `Default: ${DEFAULT_VALUES.interestRate}%`,
@@ -129,12 +122,15 @@ export const FINANCE_INPUTS: InputConfig[] = [
     placeholder: `Default: $${DEFAULT_VALUES.desiredMonthlyHousing}`,
     isCurrency: true,
   },
+];
+
+export const OTHER_INPUTS: InputConfig[] = [
   {
-    name: "monthlyRent",
-    label: "Potential Monthly Rent ($)",
-    sublabel: `Default: $${DEFAULT_VALUES.monthlyRent}`,
-    placeholder: `Default: $${DEFAULT_VALUES.monthlyRent}`,
-    isCurrency: true,
+    name: "closingCosts",
+    label: "Closing Costs (%)",
+    sublabel: `Default: ${DEFAULT_VALUES.closingCosts}%`,
+    placeholder: `Default: ${DEFAULT_VALUES.closingCosts}%`,
+    step: "0.1",
   },
   {
     name: "safetyMultiplier",
@@ -148,6 +144,13 @@ export const FINANCE_INPUTS: InputConfig[] = [
     sublabel: `Default: ${DEFAULT_VALUES.homeAppreciation}%`,
     placeholder: `Default: ${DEFAULT_VALUES.homeAppreciation}%`,
     step: "0.1",
+  },
+  {
+    name: "monthlyRent",
+    label: "Potential Monthly Rent ($)",
+    sublabel: `Default: $${DEFAULT_VALUES.monthlyRent}`,
+    placeholder: `Default: $${DEFAULT_VALUES.monthlyRent}`,
+    isCurrency: true,
   },
 ];
 
