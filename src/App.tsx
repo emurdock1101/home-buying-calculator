@@ -358,20 +358,98 @@ export default function App() {
                                   maximumFractionDigits: 0,
                                 })}
                               </p>
-                              <div className="flex flex-col mt-1 space-y-0.5">
-                                <p className="text-[10px] text-green-700 font-bold">
-                                  Equity: $
-                                  {p.principalOwned.toLocaleString(undefined, {
-                                    maximumFractionDigits: 0,
-                                  })}
-                                </p>
-                                <p className="text-[10px] text-gray-500">
-                                  Total Spent: $
-                                  {p.totalSpent.toLocaleString(undefined, {
-                                    maximumFractionDigits: 0,
-                                  })}
-                                </p>
-                              </div>
+                               <div className="flex flex-col mt-1 space-y-0.5">
+                                 <p className="text-[10px] text-green-700 font-bold">
+                                   Equity: $
+                                   {p.principalOwned.toLocaleString(undefined, {
+                                     maximumFractionDigits: 0,
+                                   })}
+                                 </p>
+                                 <p className="text-[10px] text-green-600">
+                                   - Principal Paid: $
+                                   {p.principalPaidOff.toLocaleString(
+                                     undefined,
+                                     {
+                                       maximumFractionDigits: 0,
+                                     }
+                                   )}
+                                 </p>
+                                 <p className="text-[10px] text-green-600">
+                                   - Down Payment: $
+                                   {p.initialDownPayment.toLocaleString(
+                                     undefined,
+                                     {
+                                       maximumFractionDigits: 0,
+                                     }
+                                   )}
+                                 </p>
+                                 <p className="text-[10px] text-green-600">
+                                   - Appreciation: $
+                                   {p.appreciationAmount.toLocaleString(
+                                     undefined,
+                                     {
+                                       maximumFractionDigits: 0,
+                                     }
+                                   )}
+                                 </p>
+                                 
+                                 <div className="pt-1 mt-1 border-t border-gray-100">
+                                   <p className="text-[10px] text-gray-500 font-bold">
+                                     Total Spent: $
+                                     {p.totalSpent.toLocaleString(undefined, {
+                                       maximumFractionDigits: 0,
+                                     })}
+                                   </p>
+                                   <p className="text-[10px] text-gray-400">
+                                     - Down Payment: $
+                                     {p.initialDownPayment.toLocaleString(undefined, {
+                                       maximumFractionDigits: 0,
+                                     })}
+                                   </p>
+                                   <p className="text-[10px] text-gray-400">
+                                     - Buying Costs: $
+                                     {p.sellingCosts.toLocaleString(undefined, {
+                                       maximumFractionDigits: 0,
+                                     })}
+                                   </p>
+                                   <p className="text-[10px] text-gray-400">
+                                     - Selling Costs: $
+                                     {p.sellingCosts.toLocaleString(undefined, {
+                                       maximumFractionDigits: 0,
+                                     })}
+                                   </p>
+                                   <p className="text-[10px] text-gray-400">
+                                     - Mortgage (P&I): $
+                                     {p.totalMortgage.toLocaleString(undefined, {
+                                       maximumFractionDigits: 0,
+                                     })}
+                                   </p>
+                                   <p className="text-[10px] text-gray-400">
+                                     - Maint + Repairs: $
+                                     {p.totalMaintenance.toLocaleString(
+                                       undefined,
+                                       {
+                                         maximumFractionDigits: 0,
+                                       }
+                                     )}
+                                   </p>
+                                   <p className="text-[10px] text-gray-400">
+                                     - Utilities + HOA: $
+                                     {p.totalUtilsHoa.toLocaleString(
+                                       undefined,
+                                       {
+                                         maximumFractionDigits: 0,
+                                       }
+                                     )}
+                                   </p>
+                                   <p className="text-[10px] text-gray-400">
+                                     - Tax + Insurance: $
+                                     {p.totalTaxIns.toLocaleString(undefined, {
+                                       maximumFractionDigits: 0,
+                                     })}
+                                   </p>
+                                 </div>
+                               </div>
                             </div>
                           </div>
                         </div>

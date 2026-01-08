@@ -77,6 +77,7 @@ export function calculateMetrics(inputs: Inputs): CalculationResults | null {
   const safetyMultiplier =
     parseFloat(inputs.safetyMultiplier) / PERCENT_DIVISOR + 1;
   const monthlyRent = parseFloat(inputs.monthlyRent);
+  const homeAppreciation = parseFloat(inputs.homeAppreciation) / PERCENT_DIVISOR;
 
   // Validation
   if (price === 0 || down === 0 || income === 0) {
@@ -99,8 +100,7 @@ export function calculateMetrics(inputs: Inputs): CalculationResults | null {
 
   const monthlyTax =
     ((price * taxRate) / PERCENT_DIVISOR / MONTHS_IN_YEAR) * safetyMultiplier;
-  const monthlyInsurance =
-    ((price * insRate) / PERCENT_DIVISOR / MONTHS_IN_YEAR) * safetyMultiplier;
+  const monthlyInsurance = insRate * safetyMultiplier;
   const monthlyMaintenance =
     (maintenanceAnnual / MONTHS_IN_YEAR) * safetyMultiplier;
   const monthlyRenovations =
@@ -250,28 +250,42 @@ export function calculateMetrics(inputs: Inputs): CalculationResults | null {
 
   const periodic: PeriodicCost[] = intervals.map((years) => {
     const months = years * MONTHS_IN_YEAR;
-    const totalSpent = down + closingCosts + totalMonthly * months;
-    const principalOwned =
-      down +
-      calculatePrincipalPaid(
-        loanAmount,
-        monthlyRate,
-        rawMortgagePayment,
-        Math.min(months, numPayments)
-      );
+    const appreciationAmount = price * (Math.pow(1 + homeAppreciation, years) - 1);
 
-    // "Cheaper" logic based on unrecoverable costs
+    const principalPaidOff = calculatePrincipalPaid(
+      loanAmount,
+      monthlyRate,
+      rawMortgagePayment,
+      Math.min(months, numPayments)
+    );
+    const principalOwned = down + principalPaidOff + appreciationAmount;
+
+    const totalMortgage = mortgagePayment * months;
+    const totalMaintenance = (monthlyMaintenance + monthlyRenovations) * months;
+    const totalUtilsHoa = (monthlyUtils + monthlyHoa) * months;
+    const totalTaxIns = (monthlyTax + monthlyInsurance) * months;
+
+    // totalSpent = down payment + buying closing costs + all monthly payments + selling closing costs
+    const totalSpent = down + closingCosts + totalMonthly * months + closingCosts;
+    const netCost = totalSpent - principalOwned;
+
     // Rent unrecoverable: rentTotal
-    // Own unrecoverable: totalSpent - principalOwned + 10000 (selling costs)
     const rentTotal = monthlyRent * MONTHS_IN_YEAR * years;
-    const netCost = totalSpent - principalOwned + 10000;
 
     return {
       years,
       totalSpent,
       principalOwned,
+      principalPaidOff,
+      initialDownPayment: down,
+      appreciationAmount,
+      sellingCosts: closingCosts,
       netCost,
       isCheaperThanRent: netCost < rentTotal,
+      totalMortgage,
+      totalMaintenance,
+      totalUtilsHoa,
+      totalTaxIns,
     };
   });
 

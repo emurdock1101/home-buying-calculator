@@ -5,8 +5,8 @@ export const DEFAULT_VALUES: Inputs = {
   downPayment: "130000",
   interestRate: "5.3",
   loanTerm: "15",
-  propertyTax: "0.9",
-  homeInsurance: "0.9",
+  propertyTax: "1.05",
+  homeInsurance: "125",
   hoaFees: "70",
   maintenanceAnnual: "2500",
   renovationsAnnual: "3000",
@@ -14,10 +14,11 @@ export const DEFAULT_VALUES: Inputs = {
   annualIncome: "160000",
   monthlyDebts: "0",
   emergencyFund: "18000",
-  closingCosts: "4500",
+  closingCosts: "10000",
   desiredMonthlyHousing: "4000",
   safetyMultiplier: "2",
   monthlyRent: "2600",
+  homeAppreciation: "2",
 };
 
 export const PROPERTY_INPUTS: InputConfig[] = [
@@ -64,10 +65,10 @@ export const PROPERTY_INPUTS: InputConfig[] = [
   },
   {
     name: "homeInsurance",
-    label: "Home Insurance (% of price)",
-    sublabel: `Default: ${DEFAULT_VALUES.homeInsurance}%`,
-    placeholder: `Default: ${DEFAULT_VALUES.homeInsurance}%`,
-    step: "0.1",
+    label: "Home Insurance ($/month)",
+    sublabel: `Default: $${DEFAULT_VALUES.homeInsurance}`,
+    placeholder: `Default: $${DEFAULT_VALUES.homeInsurance}`,
+    isCurrency: true,
   },
   {
     name: "hoaFees",
@@ -140,6 +141,13 @@ export const FINANCE_INPUTS: InputConfig[] = [
     label: "Safety Multiplier (%)",
     sublabel: `Default: ${DEFAULT_VALUES.safetyMultiplier}% - multiply all costs by this extra buffer for safety`,
     placeholder: `Default: ${DEFAULT_VALUES.safetyMultiplier}%`,
+  },
+  {
+    name: "homeAppreciation",
+    label: "Annual Home Appreciation (%)",
+    sublabel: `Default: ${DEFAULT_VALUES.homeAppreciation}%`,
+    placeholder: `Default: ${DEFAULT_VALUES.homeAppreciation}%`,
+    step: "0.1",
   },
 ];
 

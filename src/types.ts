@@ -16,6 +16,7 @@ export interface Inputs {
   desiredMonthlyHousing: string;
   safetyMultiplier: string;
   monthlyRent: string;
+  homeAppreciation: string;
 }
 
 export interface InputConfig {
@@ -38,8 +39,17 @@ export interface PeriodicCost {
   years: number;
   totalSpent: number;
   principalOwned: number;
+  principalPaidOff: number;
+  initialDownPayment: number;
+  appreciationAmount: number;
+  sellingCosts: number;
   netCost: number;
   isCheaperThanRent: boolean;
+  // Breakdowns
+  totalMortgage: number;
+  totalMaintenance: number;
+  totalUtilsHoa: number;
+  totalTaxIns: number;
 }
 
 export interface CalculationResults {
