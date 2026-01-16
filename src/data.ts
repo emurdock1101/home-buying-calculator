@@ -1,8 +1,8 @@
 import type { InputConfig, Inputs } from "./types";
 
 export const DEFAULT_VALUES: Inputs = {
-  purchasePrice: "420000",
-  downPayment: "130000",
+  purchasePrice: "469000",
+  downPayment: "120000",
   interestRate: "5.3",
   loanTerm: "15",
   propertyTax: "1.05",
@@ -13,12 +13,12 @@ export const DEFAULT_VALUES: Inputs = {
   utilities: "300",
   annualIncome: "160000",
   monthlyDebts: "0",
-  buyingClosingCosts: "3",
+  buyingClosingCosts: "4",
   sellingClosingCosts: "7",
   desiredMonthlyHousing: "4000",
   safetyMultiplier: "2",
-  monthlyRent: "2800",
-  homeAppreciation: "2",
+  monthlyRent: "2900",
+  homeAppreciation: "3",
 };
 
 export const PROPERTY_INPUTS: InputConfig[] = [
