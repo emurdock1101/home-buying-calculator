@@ -99,6 +99,19 @@ export const OpportunityCostsColumn = ({
                               maximumFractionDigits: 0,
                             })}
                           </p>
+                          <p className="text-[10px] text-green-600">
+                            - Forced Appreciation: $
+                            {p.forcedAppreciationAmount.toLocaleString(
+                              undefined,
+                              { maximumFractionDigits: 0 }
+                            )}
+                          </p>
+                          <p className="text-[10px] text-green-600">
+                            - Refunded Escrow: $
+                            {p.prepaidEscrow.toLocaleString(undefined, {
+                              maximumFractionDigits: 0,
+                            })}
+                          </p>
 
                           <div className="pt-1 mt-1 border-t border-gray-100">
                             <p className="text-[10px] text-gray-500 font-bold">
@@ -116,6 +129,12 @@ export const OpportunityCostsColumn = ({
                             <p className="text-[10px] text-gray-400">
                               - Buying Costs: $
                               {p.buyingCosts.toLocaleString(undefined, {
+                                maximumFractionDigits: 0,
+                              })}
+                            </p>
+                            <p className="text-[10px] text-gray-400">
+                              - Prepaid Escrow: $
+                              {p.prepaidEscrow.toLocaleString(undefined, {
                                 maximumFractionDigits: 0,
                               })}
                             </p>

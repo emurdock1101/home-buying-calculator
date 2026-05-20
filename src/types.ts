@@ -17,6 +17,7 @@ export interface Inputs {
   homeAppreciation: string;
   forcedAppreciation: string;
   buyingClosingCosts: string;
+  prepaidEscrow: string;
   sellingClosingCosts: string;
 }
 
@@ -70,7 +71,9 @@ export interface PeriodicCost {
   principalPaidOff: number;
   initialDownPayment: number;
   appreciationAmount: number;
+  forcedAppreciationAmount: number;
   buyingCosts: number;
+  prepaidEscrow: number;
   sellingCosts: number;
   netCost: number;
   isCheaperThanRent: boolean;

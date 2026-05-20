@@ -1,25 +1,26 @@
 import type { InputConfig, Inputs } from "./types";
 
 export const DEFAULT_VALUES: Inputs = {
-  purchasePrice: "365000",
-  downPayment: "120000",
-  interestRate: "5.3",
+  purchasePrice: "390000",
+  downPayment: "117000",
+  interestRate: "5.75",
   loanTerm: "15",
   propertyTax: "1.05",
   homeInsurance: "125",
   hoaFees: "75",
-  maintenanceAnnual: "3500",
+  maintenanceAnnual: "2000",
   renovations: "30000",
   utilities: "300",
   annualIncome: "160000",
   monthlyDebts: "0",
-  buyingClosingCosts: "3",
+  buyingClosingCosts: "12500",
+  prepaidEscrow: "4000",
   sellingClosingCosts: "7",
   desiredMonthlyHousing: "4000",
   safetyMultiplier: "2",
-  monthlyRent: "2900",
+  monthlyRent: "3100",
   homeAppreciation: "3",
-  forcedAppreciation: "60000",
+  forcedAppreciation: "40000",
 };
 
 export const PROPERTY_INPUTS: InputConfig[] = [
@@ -121,10 +122,17 @@ export const FINANCE_INPUTS: InputConfig[] = [
 export const OTHER_INPUTS: InputConfig[] = [
   {
     name: "buyingClosingCosts",
-    label: "Buying Closing Costs (%)",
-    sublabel: `Default: ${DEFAULT_VALUES.buyingClosingCosts}%`,
-    placeholder: `Default: ${DEFAULT_VALUES.buyingClosingCosts}%`,
-    step: "0.1",
+    label: "Buying Closing Fees ($)",
+    sublabel: `Default: $${DEFAULT_VALUES.buyingClosingCosts} - sunk fees (origination, title, transfer tax, etc.)`,
+    placeholder: `Default: $${DEFAULT_VALUES.buyingClosingCosts}`,
+    isCurrency: true,
+  },
+  {
+    name: "prepaidEscrow",
+    label: "Prepaid Escrow at Close ($)",
+    sublabel: `Default: $${DEFAULT_VALUES.prepaidEscrow} - cash to seed tax/ins escrow; refunded at sale, not sunk`,
+    placeholder: `Default: $${DEFAULT_VALUES.prepaidEscrow}`,
+    isCurrency: true,
   },
   {
     name: "sellingClosingCosts",

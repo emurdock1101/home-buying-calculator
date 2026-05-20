@@ -72,8 +72,8 @@ export function calculateMetrics(inputs: Inputs): CalculationResults | null {
   const utils = parseFloat(inputs.utilities);
   const income = parseFloat(inputs.annualIncome);
   const debts = parseFloat(inputs.monthlyDebts);
-  const buyingClosingCosts =
-    (parseFloat(inputs.buyingClosingCosts) / PERCENT_DIVISOR) * price;
+  const buyingClosingCosts = parseFloat(inputs.buyingClosingCosts);
+  const prepaidEscrow = parseFloat(inputs.prepaidEscrow);
   const sellingClosingCostsRate =
     parseFloat(inputs.sellingClosingCosts) / PERCENT_DIVISOR;
   const desiredHousing = parseFloat(inputs.desiredMonthlyHousing);
@@ -248,7 +248,11 @@ export function calculateMetrics(inputs: Inputs): CalculationResults | null {
       Math.min(months, numPayments)
     );
     const principalOwned =
-      down + principalPaidOff + appreciationAmount + forcedAppreciation;
+      down +
+      principalPaidOff +
+      appreciationAmount +
+      forcedAppreciation +
+      prepaidEscrow;
 
     const totalMortgage = mortgagePayment * months;
     const totalMaintenance = (monthlyMaintenance + monthlyRenovations) * months;
@@ -258,9 +262,12 @@ export function calculateMetrics(inputs: Inputs): CalculationResults | null {
     const currentPrice = price + appreciationAmount + forcedAppreciation;
     const sellingCosts = currentPrice * sellingClosingCostsRate;
 
-    // totalSpent = down payment + buying closing costs + all monthly payments + selling closing costs
     const totalSpent =
-      down + buyingClosingCosts + totalMonthly * months + sellingCosts;
+      down +
+      buyingClosingCosts +
+      prepaidEscrow +
+      totalMonthly * months +
+      sellingCosts;
     const netCost = totalSpent - principalOwned;
 
     // Rent unrecoverable: rentTotal
@@ -273,7 +280,9 @@ export function calculateMetrics(inputs: Inputs): CalculationResults | null {
       principalPaidOff,
       initialDownPayment: down,
       appreciationAmount,
+      forcedAppreciationAmount: forcedAppreciation,
       buyingCosts: buyingClosingCosts,
+      prepaidEscrow,
       sellingCosts,
       netCost,
       isCheaperThanRent: netCost < rentTotal,
