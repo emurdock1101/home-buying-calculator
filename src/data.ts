@@ -9,7 +9,7 @@ export const DEFAULT_VALUES: Inputs = {
   homeInsurance: "125",
   hoaFees: "75",
   maintenanceAnnual: "3500",
-  renovationsAnnual: "1500",
+  renovations: "30000",
   utilities: "300",
   annualIncome: "160000",
   monthlyDebts: "0",
@@ -19,6 +19,7 @@ export const DEFAULT_VALUES: Inputs = {
   safetyMultiplier: "2",
   monthlyRent: "2900",
   homeAppreciation: "3",
+  forcedAppreciation: "60000",
 };
 
 export const PROPERTY_INPUTS: InputConfig[] = [
@@ -78,10 +79,10 @@ export const PROPERTY_INPUTS: InputConfig[] = [
     isCurrency: true,
   },
   {
-    name: "renovationsAnnual",
-    label: "Renovations ($/year)",
-    sublabel: `Default: $${DEFAULT_VALUES.renovationsAnnual} - e.g. Roof, expansions, new kitchen, etc.`,
-    placeholder: `Default: ${DEFAULT_VALUES.renovationsAnnual}`,
+    name: "renovations",
+    label: "Renovations (total $)",
+    sublabel: `Default: $${DEFAULT_VALUES.renovations} - e.g. Roof, expansions, new kitchen, etc.`,
+    placeholder: `Default: ${DEFAULT_VALUES.renovations}`,
     isCurrency: true,
   },
   {
@@ -139,6 +140,13 @@ export const OTHER_INPUTS: InputConfig[] = [
     sublabel: `Default: ${DEFAULT_VALUES.homeAppreciation}%`,
     placeholder: `Default: ${DEFAULT_VALUES.homeAppreciation}%`,
     step: "0.1",
+  },
+  {
+    name: "forcedAppreciation",
+    label: "Forced Appreciation ($)",
+    sublabel: `Default: $${DEFAULT_VALUES.forcedAppreciation} - one-time value boost from renovations`,
+    placeholder: `Default: $${DEFAULT_VALUES.forcedAppreciation}`,
+    isCurrency: true,
   },
   {
     name: "monthlyRent",

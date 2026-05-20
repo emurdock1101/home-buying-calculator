@@ -67,7 +67,8 @@ export function calculateMetrics(inputs: Inputs): CalculationResults | null {
   const insRate = parseFloat(inputs.homeInsurance);
   const hoa = parseFloat(inputs.hoaFees);
   const maintenanceAnnual = parseFloat(inputs.maintenanceAnnual);
-  const renovationsAnnual = parseFloat(inputs.renovationsAnnual);
+  const renovationsTotal = parseFloat(inputs.renovations);
+  const forcedAppreciation = parseFloat(inputs.forcedAppreciation);
   const utils = parseFloat(inputs.utilities);
   const income = parseFloat(inputs.annualIncome);
   const debts = parseFloat(inputs.monthlyDebts);
@@ -106,7 +107,7 @@ export function calculateMetrics(inputs: Inputs): CalculationResults | null {
   const monthlyMaintenance =
     (maintenanceAnnual / MONTHS_IN_YEAR) * safetyMultiplier;
   const monthlyRenovations =
-    (renovationsAnnual / MONTHS_IN_YEAR) * safetyMultiplier;
+    (renovationsTotal / (term * MONTHS_IN_YEAR)) * safetyMultiplier;
   const monthlyHoa = hoa * safetyMultiplier;
   const monthlyUtils = utils * safetyMultiplier;
 
@@ -226,11 +227,13 @@ export function calculateMetrics(inputs: Inputs): CalculationResults | null {
     status: frontEndStatus,
   });
 
+  const finalHomeValue =
+    price * Math.pow(1 + homeAppreciation, term) + forcedAppreciation;
   const totalLifetimeCost =
     down +
     buyingClosingCosts +
     calculateLifetime(totalMonthly, term) +
-    (price * Math.pow(1 + homeAppreciation, term)) * sellingClosingCostsRate;
+    finalHomeValue * sellingClosingCostsRate;
 
   const intervals = [2, 3, 4, 5, 7, 10, 12, 15];
 
@@ -244,14 +247,15 @@ export function calculateMetrics(inputs: Inputs): CalculationResults | null {
       rawMortgagePayment,
       Math.min(months, numPayments)
     );
-    const principalOwned = down + principalPaidOff + appreciationAmount;
+    const principalOwned =
+      down + principalPaidOff + appreciationAmount + forcedAppreciation;
 
     const totalMortgage = mortgagePayment * months;
     const totalMaintenance = (monthlyMaintenance + monthlyRenovations) * months;
     const totalUtilsHoa = (monthlyUtils + monthlyHoa) * months;
     const totalTaxIns = (monthlyTax + monthlyInsurance) * months;
 
-    const currentPrice = price + appreciationAmount;
+    const currentPrice = price + appreciationAmount + forcedAppreciation;
     const sellingCosts = currentPrice * sellingClosingCostsRate;
 
     // totalSpent = down payment + buying closing costs + all monthly payments + selling closing costs
@@ -298,9 +302,7 @@ export function calculateMetrics(inputs: Inputs): CalculationResults | null {
       lifetimeBreakdown: {
         downPayment: down,
         buyingClosingCosts,
-        sellingClosingCosts:
-          (price * Math.pow(1 + homeAppreciation, term)) *
-          sellingClosingCostsRate,
+        sellingClosingCosts: finalHomeValue * sellingClosingCostsRate,
         mortgage: calculateLifetime(mortgagePayment, term),
         tax: calculateLifetime(monthlyTax, term),
         insurance: calculateLifetime(monthlyInsurance, term),

@@ -7,7 +7,7 @@ export interface Inputs {
   homeInsurance: string;
   hoaFees: string;
   maintenanceAnnual: string;
-  renovationsAnnual: string;
+  renovations: string;
   utilities: string;
   annualIncome: string;
   monthlyDebts: string;
@@ -15,6 +15,7 @@ export interface Inputs {
   safetyMultiplier: string;
   monthlyRent: string;
   homeAppreciation: string;
+  forcedAppreciation: string;
   buyingClosingCosts: string;
   sellingClosingCosts: string;
 }
